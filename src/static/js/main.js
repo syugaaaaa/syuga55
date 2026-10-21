@@ -85,6 +85,7 @@
         c.setAttribute("cx", pt.x.toFixed(1));
         c.setAttribute("cy", pt.y.toFixed(1));
         c.setAttribute("r", i === N - 1 ? "5" : "3");
+        c.setAttribute("fill", i === N - 1 ? "#B88783" : "#48675D");
         if (i === N - 1) c.setAttribute("class", "end");
         c.style.animationDelay = (0.5 + i * 0.22) + "s";
         dotsG.appendChild(c);

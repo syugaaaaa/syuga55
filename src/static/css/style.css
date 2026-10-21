@@ -40,6 +40,7 @@ body {
   letter-spacing: .03em;
 }
 img, svg, canvas { max-width: 100%; display: block; }
+img { height: auto; }
 a { color: var(--sage); text-underline-offset: .22em; text-decoration-thickness: 1px; }
 a:hover { color: var(--sage-deep); }
 :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; border-radius: 2px; }
