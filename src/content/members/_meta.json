@@ -1,0 +1,86 @@
+{
+ "categories": [
+  {
+   "id": "beauty",
+   "name": "美容・エイジングケア習慣",
+   "latin": "Beauty care"
+  },
+  {
+   "id": "body",
+   "name": "ダイエット・体型管理",
+   "latin": "Body management"
+  },
+  {
+   "id": "food",
+   "name": "食生活・食習慣",
+   "latin": "Food & nutrition"
+  },
+  {
+   "id": "sleep",
+   "name": "睡眠・休息・生活リズム",
+   "latin": "Sleep & rest"
+  },
+  {
+   "id": "movement",
+   "name": "運動・身体活動習慣",
+   "latin": "Daily movement"
+  },
+  {
+   "id": "selfcare",
+   "name": "セルフケア・心のゆとり",
+   "latin": "Self care"
+  },
+  {
+   "id": "habit",
+   "name": "生活習慣記録・振り返り",
+   "latin": "Habit tracking"
+  },
+  {
+   "id": "program",
+   "name": "美容・健康習慣の継続プログラム",
+   "latin": "Wellness program"
+  }
+ ],
+ "intro": [
+  {
+   "style": "-",
+   "text": "40代・50代の会員に向けた、美容と生活習慣の会員限定記事40本です。8カテゴリ×5記事で構成しています。"
+  },
+  {
+   "style": "-",
+   "text": "すべての記事は「記録して、振り返り、自分に合う形に整える」という共通の流れでつながっています。気になるテーマから読んでも、①から順に読んでも使えます。"
+  },
+  {
+   "style": "Heading 3",
+   "text": "おすすめの読み方"
+  },
+  {
+   "style": "List Paragraph",
+   "text": "はじめての方は、⑦の記事31「はじめての生活習慣記録」から読む"
+  },
+  {
+   "style": "List Paragraph",
+   "text": "次に、⑧の記事36「7日間セルフチェックプログラム」で現状を把握する"
+  },
+  {
+   "style": "List Paragraph",
+   "text": "気になったカテゴリ①〜⑥の記事で、テーマごとに習慣を整える"
+  },
+  {
+   "style": "List Paragraph",
+   "text": "30日・90日の節目に、記事34・35・40で振り返る"
+  },
+  {
+   "style": "Heading 3",
+   "text": "ご利用にあたって"
+  },
+  {
+   "style": "-",
+   "text": "本記事は、日々の生活習慣を見直すための一般的な情報です。医療・診断・治療を目的としたものではありません。肌トラブル、体重の急な変化、睡眠の不調、気分の落ち込みなどが続く場合は、医師や専門家にご相談ください。持病がある方、治療中の方は、食事や運動を変える前にかかりつけ医に確認しましょう。"
+  },
+  {
+   "style": "Heading 3",
+   "text": "目次"
+  }
+ ]
+}
