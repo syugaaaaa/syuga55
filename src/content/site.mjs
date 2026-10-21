@@ -5,7 +5,7 @@
 // =============================================================
 
 export const site = {
-  url: "https://sugar-rush.netlify.app", // ★独自ドメイン取得後に変更
+  url: "https://sugarrush55.net",
   name: "SUGAR RUSH",
   nameJa: "合同会社シュガーラッシュ",
   copy: "毎日の小さな記録が、これからの自分をつくる。",
@@ -84,9 +84,13 @@ export const plans = [
 export const tools = [
   { id: "guide", file: "guide.pdf", title: "記録ツール利用ガイド", pages: 4, plans: ["basic", "standard", "p90"],
     desc: "各シートの役割、記録の始め方、続かなくなったときの考え方をまとめた手引きです。" },
-  { id: "check", file: "self-check.pdf", title: "美容・生活習慣セルフチェック", pages: 2, plans: ["basic", "standard", "p90"],
+  { id: "check", file: "self-check.pdf", title: "美容・生活習慣セルフチェック（6分野版）", pages: 2, plans: ["basic", "standard", "p90"],
     desc: "6つの分野・30項目で、今の習慣を見渡すチェックシートです。月に1回の記入を想定しています。" },
-  { id: "sheet30", file: "record-30days.pdf", title: "30日生活習慣記録シート", pages: 4, plans: ["basic", "standard", "p90"],
+  { id: "sheet30s", file: "record-30days-simple.pdf", title: "30日生活習慣記録シート（シンプル版）", pages: 5, plans: ["basic", "standard", "p90"],
+    desc: "睡眠・食生活・運動・美容習慣・気分・ひとことの6項目を1日1行で記録し、最後に30日間の振り返りページがあるシートです。" },
+  { id: "checks", file: "self-check-simple.pdf", title: "美容・生活習慣セルフチェック（5分野版）", pages: 2, plans: ["basic", "standard", "p90"],
+    desc: "美容・食生活・睡眠・活動・記録とセルフケアの5分野25項目を「よくある／ときどき／まだない」で見渡すチェックシートです。" },
+  { id: "sheet30", file: "record-30days.pdf", title: "30日生活習慣記録シート（詳細版）", pages: 4, plans: ["basic", "standard", "p90"],
     desc: "睡眠・食事・運動・美容習慣を1日1行で記録する、30日分のシートです。" },
   { id: "sheet90", file: "record-90days.pdf", title: "90日生活習慣記録シート", pages: 13, plans: ["p90"],
     desc: "30日ごとの区切りページ付き。90日分を同じ形式で記録できます。" },

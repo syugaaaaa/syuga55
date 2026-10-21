@@ -400,3 +400,53 @@ h1, h2, h3, h4 { font-family: var(--f-mincho); font-weight: 600; color: var(--in
 .member-cat .entry .num { font-family: var(--f-latin); color: var(--sage); margin-right: .5em; }
 
 .photo-band + .section { padding-top: clamp(48px, 7vw, 88px) !important; }
+
+.brand-visual { margin: 0; padding: clamp(8px, 2vw, 24px) 0 0; }
+.brand-visual img { width: 100%; height: auto; border-radius: var(--r-md); box-shadow: var(--shadow); }
+.brand-visual figcaption, .themes-figure figcaption { font-size: .76rem; color: var(--ink-soft); margin-top: .6em; text-align: right; }
+.themes-figure { margin: 0 0 40px; }
+.themes-figure img { width: 100%; height: auto; border-radius: var(--r-md); }
+
+/* ---------- HOME micro-interactions ---------- */
+.hero > .wrap { position: relative; z-index: 1; }
+.hero-thread { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+.hero-thread path { fill: none; stroke: var(--sage); stroke-width: 1.1; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.hero-thread path.main { stroke-opacity: .34; }
+.hero-thread path.echo { stroke-opacity: .16; stroke: var(--champagne); stroke-width: 1.4; }
+.hero.is-drawn .hero-thread path.main { animation: srDraw 2.8s cubic-bezier(.55, .05, .25, 1) .15s forwards; }
+.hero.is-drawn .hero-thread path.echo { animation: srDraw 3.4s cubic-bezier(.55, .05, .25, 1) .55s forwards; }
+.hero-thread circle { fill: var(--sage); fill-opacity: .5; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.2); }
+.hero-thread circle.end { fill: var(--rose); fill-opacity: .9; }
+.hero.is-drawn .hero-thread circle { animation: srDot .7s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+@keyframes srDraw { to { stroke-dashoffset: 0; } }
+@keyframes srDot { to { opacity: 1; transform: scale(1); } }
+
+.hero-glow { position: absolute; left: 0; top: 0; width: 560px; height: 560px; border-radius: 50%; pointer-events: none; z-index: 0; opacity: 0; transition: opacity .7s ease;
+  background: radial-gradient(circle at center, rgba(217, 200, 173, .5) 0%, rgba(232, 238, 232, .38) 34%, rgba(250, 248, 243, 0) 68%); will-change: transform; }
+.hero.is-lit .hero-glow { opacity: 1; }
+
+.hero-steps-wrap { position: relative; margin-top: clamp(44px, 6vw, 76px); }
+.hero-steps-wrap .hero-steps { margin-top: 0; }
+.steps-line { position: absolute; left: 0; top: -7px; width: 100%; height: 14px; overflow: visible; pointer-events: none; }
+.steps-line path { fill: none; stroke: var(--champagne); stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.hero.is-drawn .steps-line path { animation: srDraw 2.2s ease-out 1s forwards; }
+@media (min-width: 861px) {
+  .hero-steps { border-top-color: transparent; }
+  .hero-steps li::before { opacity: 0; transform: scale(.3); transition: transform .3s ease, background-color .3s ease; }
+  .hero.is-drawn .hero-steps li::before { animation: srDot .6s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+  .hero.is-drawn .hero-steps li:nth-child(2)::before { animation-delay: 1.2s; }
+  .hero.is-drawn .hero-steps li:nth-child(3)::before { animation-delay: 1.6s; }
+  .hero.is-drawn .hero-steps li:nth-child(4)::before { animation-delay: 2.0s; }
+  .hero.is-drawn .hero-steps li:nth-child(5)::before { animation-delay: 2.4s; }
+  .hero.is-drawn .hero-steps li:nth-child(6)::before { animation-delay: 2.8s; }
+  .hero-steps li { cursor: default; transition: transform .3s ease; }
+  .hero-steps li.is-active { transform: translateY(-2px); }
+  .hero-steps li.is-active b { color: var(--sage); }
+  .hero-steps li.is-active::before { background: var(--rose); box-shadow: 0 0 0 5px rgba(184, 135, 131, .18); }
+}
+@media (max-width: 860px) { .steps-line { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-thread path, .steps-line path { stroke-dashoffset: 0; animation: none !important; }
+  .hero-thread circle, .hero-steps li::before { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .hero-glow { display: none; }
+}

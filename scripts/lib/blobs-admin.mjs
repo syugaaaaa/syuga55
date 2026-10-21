@@ -5,7 +5,7 @@ export function adminStore(name) {
   const siteID = process.env.NETLIFY_SITE_ID;
   const token = process.env.NETLIFY_AUTH_TOKEN;
   if (!siteID || !token) {
-    console.error("環境変数 NETLIFY_SITE_ID と NETLIFY_AUTH_TOKEN を設定してください（docs/03_Netlify環境変数設定手順.md 参照）。");
+    console.error("環境変数 NETLIFY_SITE_ID と NETLIFY_AUTH_TOKEN を設定してください（docs/03_netlify-settings.md 参照）。");
     process.exit(1);
   }
   return getStore({ name, siteID, token, consistency: "strong" });

@@ -13,6 +13,9 @@ const SESSION_HOURS = 12;
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_FAIL_ID = 5;
 const MAX_FAIL_IP = 20;
+const MAX_FAIL_SHARED_IP = 10;
+// 共通パスワードでログインした人の扱い（記事・記録シートのみ。記録提出・個別レポートは会員IDが必要）
+export const SHARED_MEMBER = { id: "共通", displayName: "会員", plan: "shared", shared: true };
 const LOCK_MS = 15 * 60 * 1000;
 const MAX_UPLOAD_FILES = 4;
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
@@ -78,16 +81,16 @@ function sameOrigin(request) {
 }
 
 // ---- 画面 ----
-function loginView({ error = "", info = "", next = "/members/", id = "" } = {}) {
+function loginView({ error = "", info = "", next = "/members/", id = "", sharedEnabled = true, idEnabled = true } = {}) {
   return `<div class="login-box"><h1>会員ログイン</h1>
 ${error ? `<p class="alert alert-error" role="alert">${esc(error)}</p>` : ""}${info ? `<p class="alert alert-ok" role="status">${esc(info)}</p>` : ""}
 <div class="form-box"><form class="form" method="POST" action="/members/login">
 <input type="hidden" name="next" value="${esc(next)}">
-<div class="field"><label for="m-id">会員ID</label><input id="m-id" type="text" name="member_id" value="${esc(id)}" autocomplete="username" autocapitalize="characters" required maxlength="20" inputmode="latin"></div>
+${idEnabled ? `<div class="field"><label for="m-id">会員ID${sharedEnabled ? '<span class="opt">個別レポートをご利用の方のみ</span>' : ""}</label><input id="m-id" type="text" name="member_id" value="${esc(id)}" autocomplete="username" autocapitalize="characters" maxlength="20" inputmode="latin"${sharedEnabled ? "" : " required"}>${sharedEnabled ? '<p class="hint">会員限定記事・記録シートだけをご利用の場合は、空欄のままパスワードを入力してください。</p>' : ""}</div>` : ""}
 <div class="field"><label for="m-pw">パスワード</label><input id="m-pw" type="password" name="password" autocomplete="current-password" required maxlength="100"></div>
 <div><button class="btn" type="submit">ログインする</button></div>
 </form></div>
-<p class="note">会員IDとパスワードは、ご入金の確認後にメールでお送りしています。パスワードを忘れた場合は、<a href="/contact/">お問い合わせフォーム</a>の「会員サイト・ログインについて」からご連絡ください。</p></div>`;
+<p class="note">パスワード（会員IDをお持ちの方は会員IDも）は、ご入金の確認後にメールでお送りしています。パスワードを忘れた場合は、<a href="/contact/">お問い合わせフォーム</a>の「会員サイト・ログインについて」からご連絡ください。</p></div>`;
 }
 
 const notFound = (member, access) => html(renderPage({ title: "ページが見つかりません", member, access, main: `<h1>ページが見つかりません</h1><p>URLをご確認ください。</p><p><a href="/members/">会員トップへ</a></p>` }), 404);
@@ -96,16 +99,30 @@ const forbidden = (member, access, msg) => html(renderPage({ title: "ご利用�
 // =============================================================
 export function createHandler({ getStore, env, now = () => Date.now() }) {
   const store = (name) => getStore(name);
+  // 署名鍵：SESSION_SECRET（推奨）。未設定の場合は共通パスワードから導出し、会員IDでのログインは無効にする
+  function keys() {
+    const ss = env("SESSION_SECRET");
+    const mp = env("MEMBER_PASSWORD");
+    const hasSS = !!ss && ss.length >= 32;
+    const hasMP = !!mp && mp.length >= 8;
+    return { secret: hasSS ? ss : hasMP ? "sr-shared-v1|" + mp : null, idEnabled: hasSS, sharedEnabled: hasMP, memberPassword: hasMP ? mp : null };
+  }
+  async function sharedVersion(mp) { return (await sha256Hex("pv|" + mp)).slice(0, 16); }
 
   async function loadMember(id) {
     if (!/^[A-Z0-9-]{3,20}$/.test(id || "")) return null;
     try { return await store(STORES.members).get(id, { type: "json" }); } catch { return null; }
   }
 
-  async function currentSession(request, secret) {
+  async function currentSession(request, secret, K) {
     const token = readCookie(request, COOKIE);
     const p = await verifySession(secret, token, Math.floor(now() / 1000));
     if (!p) return null;
+    if (p.typ === "shared") {
+      if (!K.sharedEnabled || p.pv !== (await sharedVersion(K.memberPassword))) return null;
+      return { member: SHARED_MEMBER, access: "active" };
+    }
+    if (!K.idEnabled) return null;
     const member = await loadMember(p.sub);
     if (!member || member.pv !== p.pv) return null;
     const access = accessLevel(member, now());
@@ -124,22 +141,38 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
     if (!s || t - s.first > WINDOW_MS) s = { fails: 0, first: t };
     s.fails += 1;
     if (s.fails >= max) s.lockUntil = t + LOCK_MS;
-    await store(STORES.attempts).setJSON(key, s);
+    try { await store(STORES.attempts).setJSON(key, s); } catch {}
   }
 
-  async function handleLogin(request, secret, ip) {
+  async function handleLogin(request, secret, ip, K) {
     if (!sameOrigin(request)) return html(renderPage({ title: "会員ログイン", main: loginView({ error: "ページを再読み込みしてから、もう一度お試しください。" }) }), 403);
     let form;
     try { form = await request.formData(); } catch { return html(renderPage({ title: "会員ログイン", main: loginView({ error: "入力内容を読み取れませんでした。" }) }), 400); }
     const id = String(form.get("member_id") || "").trim().toUpperCase().slice(0, 20);
     const pw = String(form.get("password") || "").slice(0, 100);
     const next = safeNext(String(form.get("next") || ""));
+    const view = (o) => loginView({ ...o, sharedEnabled: K.sharedEnabled, idEnabled: K.idEnabled });
     const ipKey = "ip-" + (await sha256Hex(secret + "|" + (ip || "unknown"))).slice(0, 32);
+    // ---- 共通パスワード（会員IDが空欄） ----
+    if (!id) {
+      if (!K.sharedEnabled) return html(renderPage({ title: "会員ログイン", main: view({ error: "会員IDを入力してください。", next }) }), 400);
+      const t0 = now();
+      if (isLocked(await attemptState(ipKey), t0)) return html(renderPage({ title: "会員ログイン", main: view({ error: "ログインの失敗が続いたため、一時的にログインを制限しています。15分ほど時間をおいてからお試しください。", next }) }), 429);
+      const ok = timingSafeEqual(await sha256Hex("cmp|" + pw), await sha256Hex("cmp|" + K.memberPassword));
+      if (!ok) {
+        await recordFail(ipKey, MAX_FAIL_SHARED_IP);
+        return html(renderPage({ title: "会員ログイン", main: view({ error: "パスワードが正しくありません。", next }) }), 401);
+      }
+      const nowSec = Math.floor(t0 / 1000), exp = nowSec + SESSION_HOURS * 3600;
+      const token = await signSession(secret, { sub: "shared", typ: "shared", pv: await sharedVersion(K.memberPassword), iat: nowSec, exp });
+      return redirect(next, { "set-cookie": cookieHeader(token, exp - nowSec) });
+    }
+    if (!K.idEnabled) return html(renderPage({ title: "会員ログイン", main: view({ error: "現在、会員IDでのログインは準備中です。会員IDを空欄にして、パスワードのみでログインしてください。", next }) }), 400);
     const idKey = "id-" + (await sha256Hex(secret + "|" + id)).slice(0, 32);
     const t = now();
     const [ipS, idS] = await Promise.all([attemptState(ipKey), attemptState(idKey)]);
     if (isLocked(ipS, t) || isLocked(idS, t)) {
-      return html(renderPage({ title: "会員ログイン", main: loginView({ error: "ログインの失敗が続いたため、一時的にログインを制限しています。15分ほど時間をおいてからお試しください。", next, id }) }), 429);
+      return html(renderPage({ title: "会員ログイン", main: view({ error: "ログインの失敗が続いたため、一時的にログインを制限しています。15分ほど時間をおいてからお試しください。", next, id }) }), 429);
     }
     const member = await loadMember(id);
     const salt = member?.salt || DUMMY_SALT;
@@ -148,12 +181,12 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
     const ok = !!member && timingSafeEqual(hash, member.hash || "");
     if (!ok) {
       await Promise.all([recordFail(ipKey, MAX_FAIL_IP), recordFail(idKey, MAX_FAIL_ID)]);
-      return html(renderPage({ title: "会員ログイン", main: loginView({ error: "会員IDまたはパスワードが正しくありません。", next, id }) }), 401);
+      return html(renderPage({ title: "会員ログイン", main: view({ error: "会員IDまたはパスワードが正しくありません。", next, id }) }), 401);
     }
     const access = accessLevel(member, t);
     if (!access) {
       const msg = member.status !== "active" ? "この会員IDは現在ご利用いただけません。お問い合わせフォームからご連絡ください。" : "ご利用期間外のため、ログインできません。";
-      return html(renderPage({ title: "会員ログイン", main: loginView({ error: msg, id }) }), 403);
+      return html(renderPage({ title: "会員ログイン", main: view({ error: msg, id }) }), 403);
     }
     try { await store(STORES.attempts).delete(idKey); } catch {}
     const nowSec = Math.floor(t / 1000);
@@ -165,6 +198,14 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
 
   // ---- 会員トップ ----
   function topView(member, access, nowMs) {
+    if (member.shared) {
+      return `<h1>会員トップ</h1>
+<div class="panel"><h2>メニュー</h2><ul class="file-list">
+<li><span class="t"><b>会員限定記事</b><span class="desc">8つのテーマ・40本の記事。記録の始め方から90日間の振り返りまで。</span></span><a class="btn btn-ghost btn-sm" href="/members/articles/">開く</a></li>
+<li><span class="t"><b>記録シートのダウンロード</b><span class="desc">A4で印刷して使える記録シート（PDF）の一覧です。</span></span><a class="btn btn-ghost btn-sm" href="/members/tools/">開く</a></li>
+</ul></div>
+<p class="note">はじめての方は、<a href="/members/articles/article-31/">記事31「はじめての生活習慣記録」</a>と<a href="/members/articles/article-36/">記事36「7日間セルフチェックプログラム」</a>からお読みください。記録の提出と個別レポートのご利用には、会員IDでのログインが必要です。</p>`;
+    }
     const today = todayJST(nowMs);
     const remain = Math.round((new Date(member.end + "T00:00:00Z") - new Date(today + "T00:00:00Z")) / 86400000) + 1;
     const links = [];
@@ -195,7 +236,7 @@ ${access === "active" ? `<p class="note">はじめての方は、会員限定記
   function toolsView(member) {
     return `<h1>記録シートのダウンロード</h1><p>PDFをA4用紙に印刷してお使いください。ご利用のプランで使えるシートにはダウンロードボタンが表示されます。</p>
 <ul class="file-list">${tools.map((t) => {
-      const ok = t.plans.includes(member.plan);
+      const ok = member.shared || t.plans.includes(member.plan);
       return `<li id="${t.id}"><span class="t"><b>${esc(t.title)}</b><span class="desc">${esc(t.desc)}（A4・${t.pages}ページ）</span></span>${ok ? `<a class="btn btn-ghost btn-sm" href="/members/tools/${t.file}" download>PDFをダウンロード</a>` : `<span class="locked">${esc(t.plans.map(planName).join("・"))}で利用できます</span>`}</li>`;
     }).join("")}</ul>`;
   }
@@ -315,20 +356,21 @@ ${items.length ? `<ul class="file-list">${items.map((r) => `<li><span class="t">
     const url = new URL(request.url);
     let path = url.pathname;
     const method = request.method.toUpperCase();
-    const secret = env("SESSION_SECRET");
-    if (!secret || secret.length < 32) {
+    const K = keys();
+    const secret = K.secret;
+    if (!secret) {
       return html(renderPage({ title: "準備中", main: `<h1>会員ページは準備中です</h1><p>現在、会員ページの設定を行っています。しばらくしてから再度アクセスしてください。</p>` }), 503);
     }
     if (path === "/members") return redirect("/members/");
 
     // ログイン・ログアウト
     if (path === "/members/login" || path === "/members/login/") {
-      if (method === "POST") return handleLogin(request, secret, ip);
+      if (method === "POST") return handleLogin(request, secret, ip, K);
       if (method !== "GET" && method !== "HEAD") return new Response(null, { status: 405, headers: SEC_HEADERS });
-      const s = await currentSession(request, secret);
+      const s = await currentSession(request, secret, K);
       if (s) return redirect("/members/");
       const info = url.searchParams.get("out") ? "ログアウトしました。" : "";
-      return html(renderPage({ title: "会員ログイン", main: loginView({ info, next: safeNext(url.searchParams.get("next") || "") }) }));
+      return html(renderPage({ title: "会員ログイン", main: loginView({ info, next: safeNext(url.searchParams.get("next") || ""), sharedEnabled: K.sharedEnabled, idEnabled: K.idEnabled }) }));
     }
     if (path === "/members/logout" || path === "/members/logout/") {
       if (method !== "POST") return redirect("/members/");
@@ -337,7 +379,7 @@ ${items.length ? `<ul class="file-list">${items.map((r) => `<li><span class="t">
     }
 
     // ここから先は認証必須
-    const session = await currentSession(request, secret);
+    const session = await currentSession(request, secret, K);
     if (!session) {
       const clear = readCookie(request, COOKIE) ? { "set-cookie": cookieHeader("", 0) } : {};
       if (method === "GET" || method === "HEAD") return redirect("/members/login?next=" + encodeURIComponent(safeNext(path)), clear);
@@ -352,10 +394,11 @@ ${items.length ? `<ul class="file-list">${items.map((r) => `<li><span class="t">
 
     // 個別レポート（利用期間終了後の猶予期間も可）
     if (path === "/members/reports/") {
-      if (!planHasReport(member.plan)) return forbidden(member, access, "個別レポートは、スタンダードプラン・90日継続プランでご利用いただけます。");
+      if (!planHasReport(member.plan)) return forbidden(member, access, member.shared ? "個別レポートのご利用には、会員IDでのログインが必要です。" : "個別レポートは、スタンダードプラン・90日継続プランでご利用いただけます。");
       return html(renderPage({ title: "個別レポート", path, member, access, main: await reportsView(member, access) }));
     }
     if (path.startsWith("/members/reports/")) {
+      if (!planHasReport(member.plan)) return forbidden(member, access, "個別レポートのご利用には、会員IDでのログインが必要です。");
       const res = await reportFile(member, decodeURIComponent(path.slice("/members/reports/".length)));
       return res || notFound(member, access);
     }
@@ -367,13 +410,13 @@ ${items.length ? `<ul class="file-list">${items.map((r) => `<li><span class="t">
       const file = path.slice("/members/tools/".length);
       const t = tools.find((x) => x.file === file);
       if (!t) return notFound(member, access);
-      if (!t.plans.includes(member.plan)) return forbidden(member, access, `このシートは${t.plans.map(planName).join("・")}でご利用いただけます。`);
+      if (!member.shared && !t.plans.includes(member.plan)) return forbidden(member, access, `このシートは${t.plans.map(planName).join("・")}でご利用いただけます。`);
       const bytes = b64urlDecode(toolFiles[t.file].replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""));
       return new Response(bytes, { status: 200, headers: { ...SEC_HEADERS, "content-type": "application/pdf", "content-disposition": `attachment; filename="${t.file}"` } });
     }
 
     if (path === "/members/submit/") {
-      if (!planHasReport(member.plan)) return forbidden(member, access, "記録の提出は、スタンダードプラン・90日継続プランでご利用いただけます。");
+      if (!planHasReport(member.plan)) return forbidden(member, access, member.shared ? "記録の提出には、会員IDでのログインが必要です。" : "記録の提出は、スタンダードプラン・90日継続プランでご利用いただけます。");
       if (method === "POST") return handleSubmit(request, member, access);
       return html(renderPage({ title: "記録の提出", path, member, access, main: submitView(member, { history: await submissionHistory(member) }) }));
     }

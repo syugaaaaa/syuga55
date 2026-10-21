@@ -105,6 +105,7 @@ write("articles/index.html", page({
   description: "美容習慣・食生活・睡眠・運動・セルフケア・生活リズムの6つのテーマで、記録と振り返りにつながる記事を公開しています。",
   main: `${pageHead({ title: "美容・健康記事", latin: "Journal", lead: "6つのテーマで、毎日の記録と振り返りにつながる記事を公開しています。会員の方は、8つのテーマ・40本の会員限定記事もお読みいただけます。", crumbs: [[null, "記事一覧"]] })}
 <section class="section" style="padding-top:0"><div class="wrap">
+<figure class="themes-figure"><img src="/assets/img/photos/three-themes.jpg" width="1600" height="900" alt="睡眠：質の良い睡眠で心と体を整える。食生活：バランスの取れた食事で内側からキレイに。運動：適度な運動で体も心も軽やかに。" loading="lazy" decoding="async"></figure>
 <nav class="cat-nav" aria-label="カテゴリー">${freeCategories.map((c) => `<a href="#cat-${c.id}">${esc(c.name)}</a>`).join("")}</nav>
 ${freeCategories.map((c) => `<section class="index-group" id="cat-${c.id}"><div><h2>${esc(c.name)}<small>${{ beauty: "Beauty", food: "Food", sleep: "Sleep", exercise: "Movement", selfcare: "Self-care", rhythm: "Daily rhythm" }[c.id]}</small></h2><div class="cat-photo">${photo(FREE_PHOTO[c.id])}</div></div><div>${free.filter((a) => a.category === c.id).map((a) => `<a class="entry" href="/articles/${a.slug}/"><h3>${esc(a.title)}</h3><p>${esc(a.summary)}</p><span class="meta"><span>${a.dateJa}</span><span>約${a.minutes}分で読めます</span></span></a>`).join("")}</div></section>`).join("")}
 </div></section>
@@ -246,6 +247,17 @@ const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e
 const distFiles = walk(DIST).map((f) => path.relative(DIST, f).split(path.sep).join("/"));
 const leaked = distFiles.filter((f) => f.startsWith("members/") || tools.some((t) => f.endsWith("/" + t.file) || f === t.file));
 if (leaked.length) throw new Error("保護対象のファイルが dist に含まれています: " + leaked.join(", "));
+// 参照しているファイルがすべて存在するか（GitHub へのアップロード漏れの検出）
+const refMissing = new Set();
+const checkRefs = (html, from) => {
+  for (const m of html.matchAll(/(?:src|href)="(\/(?:assets|samples)\/[^"#?]+)"/g)) {
+    if (!fs.existsSync(path.join(DIST, m[1]))) refMissing.add(`${m[1]}（${from}）`);
+  }
+};
+for (const f of distFiles.filter((f) => f.endsWith(".html"))) checkRefs(fs.readFileSync(path.join(DIST, f), "utf8"), f);
+for (const [p, v] of Object.entries(memberPages)) checkRefs(v.main, p);
+checkRefs(memberShell, "会員ページ共通");
+if (refMissing.size) throw new Error("ページが参照しているファイルが見つかりません。GitHub にアップロードされているか確認してください：\n  " + [...refMissing].join("\n  "));
 const forms = distFiles.filter((f) => f.endsWith(".html")).filter((f) => fs.readFileSync(path.join(DIST, f), "utf8").includes('data-netlify="true"'));
 
 // ---------- 公開前の確認事項 ----------

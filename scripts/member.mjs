@@ -56,5 +56,5 @@ if (cmd === "create") {
   if (cmd === "suspend" || cmd === "activate") { m.status = cmd === "suspend" ? "suspended" : "active"; m.pv = (m.pv || 0) + 1; await store.setJSON(id, m); console.log(`${id} を ${m.status} にしました`); }
   if (cmd === "delete") { await store.delete(id); console.log(`${id} を削除しました（レポート・提出記録は別途 npm run report / submissions で削除してください）`); }
 } else {
-  console.log("使い方は scripts/member.mjs の先頭、または docs/02_管理者向け運用マニュアル.md を参照してください。");
+  console.log("使い方は scripts/member.mjs の先頭、または docs/02_admin-manual.md を参照してください。");
 }

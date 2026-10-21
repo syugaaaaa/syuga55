@@ -14,6 +14,7 @@ export function fmtDate(ymd) {
 
 export function navItems(member, access) {
   if (!member) return [];
+  if (member.shared) return [["/members/", "会員トップ"], ["/members/articles/", "会員限定記事"], ["/members/tools/", "記録シート"]];
   if (access === "grace") return [["/members/", "会員トップ"], ["/members/reports/", "個別レポート"]];
   const items = [["/members/", "会員トップ"], ["/members/articles/", "会員限定記事"], ["/members/tools/", "記録シート"]];
   if (planHasReport(member.plan)) items.push(["/members/submit/", "記録提出"], ["/members/reports/", "個別レポート"]);
@@ -24,7 +25,8 @@ export function navItems(member, access) {
 export function renderPage({ title, main, path = "", member = null, access = null }) {
   let bar = "", nav = "";
   if (member) {
-    bar = `<div class="member-bar"><div class="wrap"><span>${esc(member.displayName || member.id)} さん（${esc(planName(member.plan))}・利用期限 ${esc(fmtDate(member.end))}）</span><form method="POST" action="/members/logout"><button type="submit">ログアウト</button></form></div></div>`;
+    const who = member.shared ? "会員ページ（パスワードでログイン中）" : `${esc(member.displayName || member.id)} さん（${esc(planName(member.plan))}・利用期限 ${esc(fmtDate(member.end))}）`;
+    bar = `<div class="member-bar"><div class="wrap"><span>${who}</span><form method="POST" action="/members/logout"><button type="submit">ログアウト</button></form></div></div>`;
     const items = navItems(member, access);
     nav = `<nav class="member-nav" aria-label="会員メニュー"><ul>${items.map(([h, t]) => {
       const cur = h === "/members/" ? path === "/members/" : path.startsWith(h);

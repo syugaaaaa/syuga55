@@ -18,7 +18,7 @@ export function planList({ compact = false } = {}) {
 function sampleFigures() {
   return `<div class="sample-pair">
   <figure class="sample-figure"><img src="/assets/img/sample-report-monthly-p1.png" width="794" height="1123" loading="lazy" alt="月間振り返りレポートの架空サンプル。表紙と記録実施日数のページ"><figcaption><span class="badge-sample">架空サンプル</span> 月間振り返りレポート（1ページ目）。実在の利用者のデータではありません。</figcaption></figure>
-  <figure class="sample-figure"><img src="/assets/img/sample-sheet30-p2.png" width="794" height="1123" loading="lazy" alt="30日生活習慣記録シートの見本。1日1行で睡眠・食事・運動・美容習慣を記録する表"><figcaption><span class="badge-sample">見本</span> 30日生活習慣記録シート（記録ページ）。</figcaption></figure>
+  <figure class="sample-figure"><img src="/assets/img/sample-sheet30-p2.png" width="794" height="1123" loading="lazy" alt="30日生活習慣記録シートの見本。1日1行で睡眠・食事・運動・美容習慣を記録する表"><figcaption><span class="badge-sample">見本</span> 30日生活習慣記録シート（シンプル版・記録ページ）。</figcaption></figure>
 </div>`;
 }
 
@@ -33,6 +33,12 @@ export function home(freeArticles) {
   ];
   return `
 <section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <svg class="hero-thread" viewBox="0 0 1440 680" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <path class="echo" pathLength="1" d="M-40 520C200 540 330 410 520 430S860 500 1010 360S1250 140 1480 110"/>
+    <path class="main" pathLength="1" d="M-40 480C190 510 360 380 560 405S880 470 1040 320S1270 100 1480 60"/>
+    <g class="dots"></g>
+  </svg>
   <div class="wrap">
     <div class="hero-grid">
       <div class="hero-copy">
@@ -42,10 +48,10 @@ export function home(freeArticles) {
       </div>
       <figure class="hero-figure"><canvas id="hero-canvas" role="img" aria-label="小さな点が一つずつ線上に増えていき、日々の記録が積み重なる様子を表したアニメーション"></canvas><figcaption>one line a day</figcaption></figure>
     </div>
-    <ol class="hero-steps" aria-label="サービスの流れ">${steps.map(([b, s]) => `<li><b>${b}</b><span>${s}</span></li>`).join("")}</ol>
+    <div class="hero-steps-wrap"><svg class="steps-line" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M0 7C120 2 220 12 330 7S560 2 660 7S880 12 1000 7"/></svg><ol class="hero-steps" aria-label="サービスの流れ">${steps.map(([b, s]) => `<li><b>${b}</b><span>${s}</span></li>`).join("")}</ol></div>
   </div>
 </section>
-<figure class="photo-band"><img src="/assets/img/photos/desk.jpg" alt="窓辺の机に、開いたノートとペン、マグカップが置かれている" loading="lazy" decoding="async"></figure>
+<figure class="brand-visual"><div class="wrap"><img src="/assets/img/photos/brand-visual.jpg" width="1600" height="901" alt="毎日の小さな積み重ねが、未来のわたしをつくる。美容と生活習慣を整えて、心も体も自分らしく輝く毎日へ。睡眠・食生活・運動・美容習慣・セルフケアのイメージと、記録シート・振り返りレポートのイメージ" loading="lazy" decoding="async"><figcaption>イメージ画像です。実際の記録シート・レポートは<a href="/tools/">記録ツール</a>・<a href="/report/">振り返りレポート</a>の見本をご覧ください。</figcaption></div></figure>
 
 ${curve()}
 <section class="section tint">
@@ -118,7 +124,7 @@ ${ctaBand()}`;
 
 export function service() {
   return `${pageHead({ title: "サービス紹介", latin: "Service", lead: "記事で考え方を知り、記録で毎日を書き留め、レポートで見渡す。3つの要素をつないだ、会員制のWebサービスです。", crumbs: [[null, "サービス紹介"]] })}
-<figure class="photo-band"><img src="/assets/img/photos/flow-laptop.jpg" alt="ノート、ノートパソコン、本、水のグラスが机の上に順に並んでいる" loading="lazy" decoding="async"></figure>
+<figure class="photo-band"><img src="/assets/img/photos/still-life.jpg" alt="明るいテーブルに、サラダ、ヨガマット、スキンケア用品、ハーブティー、開いたノートが並んでいる" loading="lazy" decoding="async"></figure>
 <section class="section" style="padding-top:0">
   <div class="wrap split">
     <div><div class="sec-head"><h2>サービスの概要</h2></div></div>
@@ -235,6 +241,8 @@ ${ctaBand({ title: "お申込みは、お問い合わせフォームから。", 
 export function toolsPage() {
   const chips = (t) => `<span class="plan-chips">${t.plans.map((id) => `<span class="plan-chip">${esc(planName(id))}</span>`).join("")}</span>`;
   return `${pageHead({ title: "記録ツール紹介", latin: "Record tools", lead: "記録ツールは、A4用紙に印刷して手書きで使うPDFです。会員ページからダウンロードでき、プランによって利用できるシートが異なります。", crumbs: [[null, "記録ツール"]] })}
+<figure class="photo-band"><img src="/assets/img/photos/tracker.jpg" alt="ノートに書かれた30日間の生活習慣の記録表と、レモン水、フルーツ、ヨガマット" loading="lazy" decoding="async"></figure>
+<p class="photo-note">写真はイメージです。実際のシートは下の見本をご覧ください。</p>
 <section class="section" style="padding-top:0">
   <div class="wrap">
     <ul class="file-list">${tools.map((t) => `<li id="${t.id}"><span class="t"><b>${esc(t.title)}</b><span class="desc">${esc(t.desc)}（A4・${t.pages}ページ）</span></span>${chips(t)}</li>`).join("")}</ul>
@@ -246,13 +254,13 @@ ${curve()}
   <div class="wrap split">
     <div>
       <div class="sec-head"><h2>見本をご覧ください</h2><span class="latin">Preview</span></div>
-      <p>30日生活習慣記録シートは、1日1行で睡眠・食事・運動・美容習慣を書き込む形式です。最初は3つの列だけで始め、慣れてきたら列を増やしていく使い方を、利用ガイドと会員限定記事でご案内しています。</p>
-      <p><a class="btn btn-ghost" href="/samples/sample-record-30days.pdf">30日記録シートの見本（PDF）</a></p>
-      <p class="note">見本は表紙と記録ページの一部です。全ページは会員ページからダウンロードできます。</p>
+      <p>記録シートは、1日1行で睡眠・食生活・運動・美容習慣などを書き込む形式です。項目をしぼった「シンプル版」と、時刻や記号で細かく記録する「詳細版」があり、どちらも会員ページからダウンロードできます。</p>
+      <p class="btn-row"><a class="btn btn-ghost" href="/samples/sample-record-30days.pdf">30日記録シートの見本（PDF）</a><a class="btn btn-ghost" href="/samples/sample-self-check.pdf">セルフチェックの見本（PDF）</a></p>
+      <p class="note">見本は「30日生活習慣記録シート（シンプル版）」と「美容・生活習慣セルフチェック（5分野版）」です。</p>
     </div>
     <div class="sample-pair">
-      <figure class="sample-figure"><img src="/assets/img/sample-sheet30-p2.png" width="794" height="1123" loading="lazy" alt="30日生活習慣記録シートの記録ページ見本"><figcaption><span class="badge-sample">見本</span> 30日生活習慣記録シート</figcaption></figure>
-      <figure class="sample-figure"><img src="/assets/img/sample-selfcheck-p1.png" width="794" height="1123" loading="lazy" alt="美容・生活習慣セルフチェックの見本"><figcaption><span class="badge-sample">見本</span> 美容・生活習慣セルフチェック</figcaption></figure>
+      <figure class="sample-figure"><img src="/assets/img/sample-sheet30-p2.png" width="794" height="1123" loading="lazy" alt="30日生活習慣記録シートの記録ページ見本。日付・睡眠・食生活・運動・活動・美容習慣・気分・ひとことの欄がある表"><figcaption><span class="badge-sample">見本</span> 30日生活習慣記録シート（シンプル版）</figcaption></figure>
+      <figure class="sample-figure"><img src="/assets/img/sample-selfcheck-p1.png" width="794" height="1123" loading="lazy" alt="美容・生活習慣セルフチェックの見本"><figcaption><span class="badge-sample">見本</span> 美容・生活習慣セルフチェック（5分野版）</figcaption></figure>
     </div>
   </div>
 </section>
@@ -284,7 +292,7 @@ export function reportPage() {
       <h2>90日総括レポート</h2>
       <p>A4縦・3〜4ページ。90日継続プランで、3回目の月間レポートとあわせてお届けします。</p>
       <ol>${total.map((m) => `<li>${m}</li>`).join("")}</ol>
-      <p class="btn-row"><a class="btn btn-ghost" href="/samples/sample-monthly-report.pdf">月間レポートの架空サンプル（PDF）</a><a class="btn btn-ghost" href="/samples/sample-90day-report.pdf">90日総括レポートの架空サンプル（PDF）</a></p>
+      <p class="btn-row"><a class="btn btn-ghost" href="/samples/sample-monthly-report.pdf">月間レポートの架空サンプル（PDF・1〜2ページ）</a><a class="btn btn-ghost" href="/samples/sample-90day-report.pdf">90日総括レポートの架空サンプル（PDF）</a></p>
     </div>
     <div class="sample-pair">
       <figure class="sample-figure"><img src="/assets/img/sample-report-monthly-p1.png" width="794" height="1123" loading="lazy" alt="月間振り返りレポートの架空サンプル1ページ目"><figcaption><span class="badge-sample">架空サンプル</span> 月間レポート 1ページ目</figcaption></figure>
