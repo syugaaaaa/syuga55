@@ -1,0 +1,35 @@
+# 合同会社シュガーラッシュ Netlify 設定
+# 公開ディレクトリは dist（ビルドで毎回作り直します）
+[build]
+  command = "npm run build"
+  publish = "dist"
+  edge_functions = "netlify/edge-functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# 全ページ共通のセキュリティヘッダー
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# /members 以下は Edge Function（netlify/edge-functions/members.js）がすべて応答します。
+# dist/ に members フォルダは作りません。
+[[edge_functions]]
+  path = "/members"
+  function = "members"
+
+[[edge_functions]]
+  path = "/members/*"
+  function = "members"
