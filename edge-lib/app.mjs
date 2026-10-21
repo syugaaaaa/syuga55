@@ -6,7 +6,9 @@
 import { memberPages, tools, toolFiles, reportGraceDays } from "./generated/member-content.mjs";
 import { signSession, verifySession, hashPassword, sha256Hex, timingSafeEqual, b64urlDecode, DEFAULT_ITERATIONS } from "./crypto.mjs";
 import { renderPage, esc, fmtDate, planName, planHasReport } from "./render.mjs";
+import { sharedDefault } from "./shared-default.mjs";
 
+export const APP_VERSION = "2026-10-21c";
 export const COOKIE = "sr_session";
 export const STORES = { members: "members", attempts: "login-attempts", reports: "reports", submissions: "submissions" };
 const SESSION_HOURS = 12;
@@ -97,7 +99,7 @@ const notFound = (member, access) => html(renderPage({ title: "ページが見�
 const forbidden = (member, access, msg) => html(renderPage({ title: "ご利用いただけません", member, access, main: `<h1>このページはご利用いただけません</h1><p>${esc(msg)}</p><p><a href="/members/">会員トップへ</a></p>` }), 403);
 
 // =============================================================
-export function createHandler({ getStore, env, now = () => Date.now() }) {
+export function createHandler({ getStore, env, now = () => Date.now(), builtinShared = sharedDefault }) {
   const store = (name) => getStore(name);
   // 署名鍵：SESSION_SECRET（推奨）。未設定の場合は共通パスワードから導出し、会員IDでのログインは無効にする
   function keys() {
@@ -105,9 +107,18 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
     const mp = env("MEMBER_PASSWORD");
     const hasSS = !!ss && ss.length >= 32;
     const hasMP = !!mp && mp.length >= 8;
-    return { secret: hasSS ? ss : hasMP ? "sr-shared-v1|" + mp : null, idEnabled: hasSS, sharedEnabled: hasMP, memberPassword: hasMP ? mp : null };
+    // 環境変数がない場合は、edge-lib/shared-default.mjs の初期値（ハッシュのみ）を使う
+    const builtin = !hasMP && builtinShared && builtinShared.hash ? builtinShared : null;
+    const sharedEnabled = hasMP || !!builtin;
+    const fallbackKey = hasMP ? "sr-shared-v1|" + mp : builtin ? "sr-shared-builtin|" + builtin.key + "|" + builtin.hash : null;
+    return { secret: hasSS ? ss : fallbackKey, idEnabled: hasSS, sharedEnabled, memberPassword: hasMP ? mp : null, builtin,
+      source: hasMP ? "env" : builtin ? "builtin" : "none" };
   }
-  async function sharedVersion(mp) { return (await sha256Hex("pv|" + mp)).slice(0, 16); }
+  async function sharedVersion(K) { return (await sha256Hex("pv|" + (K.memberPassword ?? "builtin:" + K.builtin.hash))).slice(0, 16); }
+  async function sharedMatch(K, pw) {
+    if (K.memberPassword) return timingSafeEqual(await sha256Hex("cmp|" + pw), await sha256Hex("cmp|" + K.memberPassword));
+    return timingSafeEqual(await hashPassword(pw, K.builtin.salt, K.builtin.iter), K.builtin.hash);
+  }
 
   async function loadMember(id) {
     if (!/^[A-Z0-9-]{3,20}$/.test(id || "")) return null;
@@ -119,7 +130,7 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
     const p = await verifySession(secret, token, Math.floor(now() / 1000));
     if (!p) return null;
     if (p.typ === "shared") {
-      if (!K.sharedEnabled || p.pv !== (await sharedVersion(K.memberPassword))) return null;
+      if (!K.sharedEnabled || p.pv !== (await sharedVersion(K))) return null;
       return { member: SHARED_MEMBER, access: "active" };
     }
     if (!K.idEnabled) return null;
@@ -158,13 +169,13 @@ export function createHandler({ getStore, env, now = () => Date.now() }) {
       if (!K.sharedEnabled) return html(renderPage({ title: "会員ログイン", main: view({ error: "会員IDを入力してください。", next }) }), 400);
       const t0 = now();
       if (isLocked(await attemptState(ipKey), t0)) return html(renderPage({ title: "会員ログイン", main: view({ error: "ログインの失敗が続いたため、一時的にログインを制限しています。15分ほど時間をおいてからお試しください。", next }) }), 429);
-      const ok = timingSafeEqual(await sha256Hex("cmp|" + pw), await sha256Hex("cmp|" + K.memberPassword));
+      const ok = await sharedMatch(K, pw);
       if (!ok) {
         await recordFail(ipKey, MAX_FAIL_SHARED_IP);
         return html(renderPage({ title: "会員ログイン", main: view({ error: "パスワードが正しくありません。", next }) }), 401);
       }
       const nowSec = Math.floor(t0 / 1000), exp = nowSec + SESSION_HOURS * 3600;
-      const token = await signSession(secret, { sub: "shared", typ: "shared", pv: await sharedVersion(K.memberPassword), iat: nowSec, exp });
+      const token = await signSession(secret, { sub: "shared", typ: "shared", pv: await sharedVersion(K), iat: nowSec, exp });
       return redirect(next, { "set-cookie": cookieHeader(token, exp - nowSec) });
     }
     if (!K.idEnabled) return html(renderPage({ title: "会員ログイン", main: view({ error: "現在、会員IDでのログインは準備中です。会員IDを空欄にして、パスワードのみでログインしてください。", next }) }), 400);
@@ -359,7 +370,7 @@ ${items.length ? `<ul class="file-list">${items.map((r) => `<li><span class="t">
     const K = keys();
     const secret = K.secret;
     if (!secret) {
-      return html(renderPage({ title: "準備中", main: `<h1>会員ページは準備中です</h1><p>現在、会員ページの設定を行っています。しばらくしてから再度アクセスしてください。</p>` }), 503);
+      return html(renderPage({ title: "準備中", main: `<h1>会員ページは準備中です</h1><p>現在、会員ページの設定を行っています。しばらくしてから再度アクセスしてください。</p><p class="note">管理者の方へ：共通パスワードが設定されていません（版 ${APP_VERSION}）。</p>` }), 503);
     }
     if (path === "/members") return redirect("/members/");
 

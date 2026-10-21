@@ -26,7 +26,7 @@ const SECRET = "test-secret-0123456789-abcdefghijklmnop";
 let NOW = Date.parse("2026-10-20T03:00:00Z"); // 2026-10-20 12:00 JST
 const getStore = memoryBlobs();
 const env = (k) => (k === "SESSION_SECRET" ? SECRET : undefined);
-const handle = createHandler({ getStore, env, now: () => NOW });
+const handle = createHandler({ getStore, env, now: () => NOW, builtinShared: null });
 const ORIGIN = "https://sugar-rush.example";
 
 async function addMember(id, plan, start, end, password, status = "active") {
@@ -59,7 +59,7 @@ await addMember("SR0007", "basic", "2026-10-01", "2026-10-30", "susp-pass-7777",
 
 // --- 未認証 ---
 await t("SESSION_SECRET 未設定なら 503（会員ページを出さない）", async () => {
-  const h = createHandler({ getStore, env: () => undefined, now: () => NOW });
+  const h = createHandler({ getStore, env: () => undefined, now: () => NOW, builtinShared: null });
   const r = await h(req("/members/articles/"), {});
   assert.equal(r.status, 503);
 });
@@ -259,7 +259,7 @@ await t("ログイン後の遷移先は /members/ 配下のみ（オープンリ
 {
   const MP = "shared-pass-0001";
   let envShared = { SESSION_SECRET: SECRET, MEMBER_PASSWORD: MP };
-  const hS = createHandler({ getStore, env: (k) => envShared[k], now: () => NOW });
+  const hS = createHandler({ getStore, env: (k) => envShared[k], now: () => NOW, builtinShared: null });
   const sharedLogin = async (pw, ip = "198.18.0.1", h = hS) => {
     const r = await h(req("/members/login", { method: "POST", body: form({ member_id: "", password: pw, next: "/members/articles/" }) }), { ip });
     return { r, token: ((r.headers.get("set-cookie") || "").match(new RegExp(`${COOKIE}=([^;]+)`)) || [])[1] };
@@ -291,7 +291,7 @@ await t("ログイン後の遷移先は /members/ 配下のみ（オープンリ
     envShared = { SESSION_SECRET: SECRET, MEMBER_PASSWORD: MP };
   });
   await t("SESSION_SECRET なし・MEMBER_PASSWORD のみでも共通ログインは動き、会員IDログインは無効", async () => {
-    const hOnly = createHandler({ getStore, env: (k) => (k === "MEMBER_PASSWORD" ? MP : undefined), now: () => NOW });
+    const hOnly = createHandler({ getStore, env: (k) => (k === "MEMBER_PASSWORD" ? MP : undefined), now: () => NOW, builtinShared: null });
     const { r, token } = await sharedLogin(MP, "198.18.0.20", hOnly);
     assert.equal(r.status, 303);
     assert.equal((await hOnly(req("/members/articles/", { cookie: token }), {})).status, 200);
@@ -305,6 +305,35 @@ await t("ログイン後の遷移先は /members/ 配下のみ（オープンリ
     const [body, sig] = sTok.split(".");
     const forged = Buffer.from(JSON.stringify({ sub: "SR0004", pv: 1, iat: 0, exp: 9999999999 })).toString("base64url") + "." + sig;
     assert.equal((await hS(req("/members/reports/", { cookie: forged }), {})).status, 303);
+  });
+}
+
+
+// --- 共通パスワードの初期値（環境変数なし） ---
+{
+  const { hashPassword: hp, randomB64url: rb } = await import("../edge-lib/crypto.mjs");
+  const salt = rb(16); const builtin = { salt, iter: 20000, hash: await hp("builtin-pass-99", salt, 20000), key: rb(32) };
+  const hB = createHandler({ getStore, env: () => undefined, now: () => NOW, builtinShared: builtin });
+  const go = (h, pw, ip) => h(req("/members/login", { method: "POST", body: form({ member_id: "", password: pw }) }), { ip });
+  await t("環境変数がなくても、初期値の共通パスワードでログインできる（準備中にならない）", async () => {
+    assert.equal((await hB(req("/members/login"), {})).status, 200);
+    const r = await go(hB, "builtin-pass-99", "198.19.0.1");
+    assert.equal(r.status, 303);
+    const tok = r.headers.get("set-cookie").match(new RegExp(`${COOKIE}=([^;]+)`))[1];
+    assert.equal((await hB(req("/members/articles/", { cookie: tok }), {})).status, 200);
+    assert.equal((await go(hB, "wrong-pass-00", "198.19.0.2")).status, 401);
+  });
+  await t("環境変数 MEMBER_PASSWORD を設定すると、そちらが優先される", async () => {
+    const hE = createHandler({ getStore, env: (k) => (k === "MEMBER_PASSWORD" ? "env-pass-777" : undefined), now: () => NOW, builtinShared: builtin });
+    assert.equal((await go(hE, "builtin-pass-99", "198.19.0.3")).status, 401);
+    assert.equal((await go(hE, "env-pass-777", "198.19.0.4")).status, 303);
+  });
+  await t("実際の初期値ファイル（edge-lib/shared-default.mjs）が読み込めて、平文のパスワードを含まない", async () => {
+    const fs = await import("node:fs");
+    const src = fs.readFileSync(new URL("../edge-lib/shared-default.mjs", import.meta.url), "utf8");
+    const { sharedDefault } = await import("../edge-lib/shared-default.mjs");
+    assert.ok(sharedDefault.hash && sharedDefault.salt && sharedDefault.key);
+    assert.ok(!/sg\d{6,}/.test(src));
   });
 }
 

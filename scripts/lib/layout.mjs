@@ -1,6 +1,13 @@
 import { esc } from "./markdown.mjs";
 import { logoMark, thread } from "./icons.mjs";
 import { site, company } from "../../src/content/site.mjs";
+import fs from "node:fs";
+import crypto from "node:crypto";
+import { fileURLToPath } from "node:url";
+// CSS・JS の内容から版番号を作り、URL に付ける（更新すると必ず新しいファイルが読み込まれる）
+const ver = (rel) => crypto.createHash("sha1").update(fs.readFileSync(fileURLToPath(new URL("../../src/static/" + rel, import.meta.url)))).digest("hex").slice(0, 10);
+export const CSS_V = ver("css/style.css");
+export const JS_V = ver("js/main.js");
 
 export const NAV_EXTRA = [["/flow/", "ご利用の流れ"], ["/faq/", "よくある質問"]];
 export const NAV = [
@@ -41,7 +48,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css?v=${CSS_V}">
 </head>`;
 }
 
@@ -89,7 +96,7 @@ ${header(path)}
 ${main}
 </main>
 ${footer()}
-<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/main.js?v=${JS_V}" defer></script>
 </body>
 </html>
 `;

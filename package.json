@@ -4,13 +4,16 @@
   "private": true,
   "type": "module",
   "description": "合同会社シュガーラッシュ 公式サイト・会員サイト",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node tests/edge-auth.test.mjs",
     "member": "node scripts/member.mjs",
     "report": "node scripts/report.mjs",
-    "submissions": "node scripts/submissions.mjs"
+    "submissions": "node scripts/submissions.mjs",
+    "shared-password": "node scripts/shared-password.mjs"
   },
   "dependencies": {
     "@netlify/blobs": "11.1.4"

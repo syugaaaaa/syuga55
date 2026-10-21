@@ -13,7 +13,9 @@
 
 ## 2. 環境変数 `MEMBER_PASSWORD`（会員ページの共通パスワード）
 
-会員限定記事・記録シートを見るための共通パスワードです。**設定するまで会員ページは「準備中」と表示されます。**
+会員限定記事・記録シートを見るための共通パスワードです。
+
+> 初期値の共通パスワードが `edge-lib/shared-default.mjs` に設定済みのため（パスワード本体ではなく、元に戻せないハッシュ値のみを保存）、この環境変数を設定しなくても会員ページは使えます。初期値を変えたいときは `npm run shared-password -- 新しいパスワード` を実行してコミットするか、下の手順で環境変数を設定してください（環境変数が優先されます）。
 
 1. 「Project configuration（Site configuration）」→「Environment variables」→「Add a variable」
    - Key：`MEMBER_PASSWORD`

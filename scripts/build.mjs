@@ -9,7 +9,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFile, render, parseRefs, esc } from "./lib/markdown.mjs";
-import { page, pageHead, header, footer, head, ctaBand } from "./lib/layout.mjs";
+import { page, pageHead, header, footer, head, ctaBand, JS_V } from "./lib/layout.mjs";
 import { icons, curve } from "./lib/icons.mjs";
 import { site, company, plans, tools, terms, freeCategories } from "../src/content/site.mjs";
 import * as P from "./pages-main.mjs";
@@ -105,7 +105,7 @@ write("articles/index.html", page({
   description: "美容習慣・食生活・睡眠・運動・セルフケア・生活リズムの6つのテーマで、記録と振り返りにつながる記事を公開しています。",
   main: `${pageHead({ title: "美容・健康記事", latin: "Journal", lead: "6つのテーマで、毎日の記録と振り返りにつながる記事を公開しています。会員の方は、8つのテーマ・40本の会員限定記事もお読みいただけます。", crumbs: [[null, "記事一覧"]] })}
 <section class="section" style="padding-top:0"><div class="wrap">
-<figure class="themes-figure"><img src="/assets/img/photos/three-themes.jpg" width="1600" height="900" alt="睡眠：質の良い睡眠で心と体を整える。食生活：バランスの取れた食事で内側からキレイに。運動：適度な運動で体も心も軽やかに。" loading="lazy" decoding="async"></figure>
+<figure class="themes-figure"><img src="/assets/img/photos/three-themes.jpg" alt="睡眠：質の良い睡眠で心と体を整える。食生活：バランスの取れた食事で内側からキレイに。運動：適度な運動で体も心も軽やかに。" loading="lazy" decoding="async"></figure>
 <nav class="cat-nav" aria-label="カテゴリー">${freeCategories.map((c) => `<a href="#cat-${c.id}">${esc(c.name)}</a>`).join("")}</nav>
 ${freeCategories.map((c) => `<section class="index-group" id="cat-${c.id}"><div><h2>${esc(c.name)}<small>${{ beauty: "Beauty", food: "Food", sleep: "Sleep", exercise: "Movement", selfcare: "Self-care", rhythm: "Daily rhythm" }[c.id]}</small></h2><div class="cat-photo">${photo(FREE_PHOTO[c.id])}</div></div><div>${free.filter((a) => a.category === c.id).map((a) => `<a class="entry" href="/articles/${a.slug}/"><h3>${esc(a.title)}</h3><p>${esc(a.summary)}</p><span class="meta"><span>${a.dateJa}</span><span>約${a.minutes}分で読めます</span></span></a>`).join("")}</div></section>`).join("")}
 </div></section>
@@ -157,7 +157,7 @@ ${header("/members/", { members: true })}
 {{MAIN}}
 </div></main>
 ${footer()}
-<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/main.js?v=${JS_V}" defer></script>
 </body>
 </html>`;
 

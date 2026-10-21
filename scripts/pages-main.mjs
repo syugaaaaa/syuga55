@@ -35,8 +35,8 @@ export function home(freeArticles) {
 <section class="hero">
   <div class="hero-glow" aria-hidden="true"></div>
   <svg class="hero-thread" viewBox="0 0 1440 680" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-    <path class="echo" pathLength="1" d="M-40 520C200 540 330 410 520 430S860 500 1010 360S1250 140 1480 110"/>
-    <path class="main" pathLength="1" d="M-40 480C190 510 360 380 560 405S880 470 1040 320S1270 100 1480 60"/>
+    <path class="echo" fill="none" stroke="#D9C8AD" stroke-opacity=".16" pathLength="1" d="M-40 520C200 540 330 410 520 430S860 500 1010 360S1250 140 1480 110"/>
+    <path class="main" fill="none" stroke="#48675D" stroke-opacity=".34" pathLength="1" d="M-40 480C190 510 360 380 560 405S880 470 1040 320S1270 100 1480 60"/>
     <g class="dots"></g>
   </svg>
   <div class="wrap">
@@ -48,10 +48,10 @@ export function home(freeArticles) {
       </div>
       <figure class="hero-figure"><canvas id="hero-canvas" role="img" aria-label="小さな点が一つずつ線上に増えていき、日々の記録が積み重なる様子を表したアニメーション"></canvas><figcaption>one line a day</figcaption></figure>
     </div>
-    <div class="hero-steps-wrap"><svg class="steps-line" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M0 7C120 2 220 12 330 7S560 2 660 7S880 12 1000 7"/></svg><ol class="hero-steps" aria-label="サービスの流れ">${steps.map(([b, s]) => `<li><b>${b}</b><span>${s}</span></li>`).join("")}</ol></div>
+    <div class="hero-steps-wrap"><svg class="steps-line" viewBox="0 0 1000 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill="none" stroke="#D9C8AD" pathLength="1" d="M0 7C120 2 220 12 330 7S560 2 660 7S880 12 1000 7"/></svg><ol class="hero-steps" aria-label="サービスの流れ">${steps.map(([b, s]) => `<li><b>${b}</b><span>${s}</span></li>`).join("")}</ol></div>
   </div>
 </section>
-<figure class="brand-visual"><div class="wrap"><img src="/assets/img/photos/brand-visual.jpg" width="1600" height="901" alt="毎日の小さな積み重ねが、未来のわたしをつくる。美容と生活習慣を整えて、心も体も自分らしく輝く毎日へ。睡眠・食生活・運動・美容習慣・セルフケアのイメージと、記録シート・振り返りレポートのイメージ" loading="lazy" decoding="async"><figcaption>イメージ画像です。実際の記録シート・レポートは<a href="/tools/">記録ツール</a>・<a href="/report/">振り返りレポート</a>の見本をご覧ください。</figcaption></div></figure>
+<figure class="brand-visual"><div class="wrap"><img src="/assets/img/photos/brand-visual.jpg" alt="毎日の小さな積み重ねが、未来のわたしをつくる。美容と生活習慣を整えて、心も体も自分らしく輝く毎日へ。睡眠・食生活・運動・美容習慣・セルフケアのイメージと、記録シート・振り返りレポートのイメージ" loading="lazy" decoding="async"><figcaption>イメージ画像です。実際の記録シート・レポートは<a href="/tools/">記録ツール</a>・<a href="/report/">振り返りレポート</a>の見本をご覧ください。</figcaption></div></figure>
 
 ${curve()}
 <section class="section tint">

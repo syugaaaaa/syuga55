@@ -22,7 +22,8 @@
 [[headers]]
   for = "/assets/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    # 毎回更新を確認（変更がなければ304で高速に返る）。長期キャッシュにすると更新後も古いCSSが使われるため
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 # /members 以下は Edge Function（netlify/edge-functions/members.js）がすべて応答します。
 # dist/ に members フォルダは作りません。
