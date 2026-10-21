@@ -1,0 +1,1810 @@
+{
+ "type": "total90",
+ "sample": true,
+ "title": "90日総括レポート",
+ "memberName": "見本 さくら",
+ "memberId": "SAMPLE-02",
+ "plan": "90日継続プラン",
+ "periodStart": "2026-07-01",
+ "periodEnd": "2026-09-28",
+ "issued": "2026-10-09",
+ "months": [
+  {
+   "label": "1か月目",
+   "periodStart": "2026-07-01",
+   "periodEnd": "2026-07-30",
+   "days": [
+    {
+     "d": "2026-07-01",
+     "recorded": true,
+     "bed": "23:06",
+     "wake": "6:15",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 6658,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-02",
+     "recorded": true,
+     "bed": "0:04",
+     "wake": "6:25",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 9794,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-03",
+     "recorded": true,
+     "bed": "0:05",
+     "wake": "6:47",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4574,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-04",
+     "recorded": true,
+     "bed": "0:04",
+     "wake": "7:36",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4884,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-05",
+     "recorded": true,
+     "bed": "23:23",
+     "wake": "7:48",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 7503,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-06",
+     "recorded": true,
+     "bed": "23:42",
+     "wake": "6:47",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5889,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-07",
+     "recorded": true,
+     "bed": "22:52",
+     "wake": "6:45",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4464,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-08",
+     "recorded": true,
+     "bed": "23:44",
+     "wake": "6:49",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5443,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-09",
+     "recorded": false
+    },
+    {
+     "d": "2026-07-10",
+     "recorded": true,
+     "bed": "0:47",
+     "wake": "6:16",
+     "wakeFeel": "△",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 8963,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-11",
+     "recorded": true,
+     "bed": "0:29",
+     "wake": "7:31",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9268,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-12",
+     "recorded": true,
+     "bed": "22:55",
+     "wake": "7:35",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4931,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "—"
+    },
+    {
+     "d": "2026-07-13",
+     "recorded": true,
+     "bed": "23:22",
+     "wake": "6:40",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5597,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-14",
+     "recorded": true,
+     "bed": "23:38",
+     "wake": "6:37",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 7051,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "—"
+    },
+    {
+     "d": "2026-07-15",
+     "recorded": true,
+     "bed": "23:08",
+     "wake": "6:41",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 6378,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-16",
+     "recorded": true,
+     "bed": "23:34",
+     "wake": "6:27",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 10090,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-17",
+     "recorded": true,
+     "bed": "0:39",
+     "wake": "6:18",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 5223,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-18",
+     "recorded": true,
+     "bed": "23:57",
+     "wake": "7:48",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9759,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-19",
+     "recorded": true,
+     "bed": "23:10",
+     "wake": "7:39",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 5974,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-20",
+     "recorded": true,
+     "bed": "23:45",
+     "wake": "6:39",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6174,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-21",
+     "recorded": false
+    },
+    {
+     "d": "2026-07-22",
+     "recorded": false
+    },
+    {
+     "d": "2026-07-23",
+     "recorded": true,
+     "bed": "22:54",
+     "wake": "6:16",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9097,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-24",
+     "recorded": true,
+     "bed": "0:49",
+     "wake": "6:17",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 7286,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-25",
+     "recorded": true,
+     "bed": "0:46",
+     "wake": "7:35",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7400,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-07-26",
+     "recorded": true,
+     "bed": "23:13",
+     "wake": "7:38",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 7063,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-27",
+     "recorded": true,
+     "bed": "23:02",
+     "wake": "6:48",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7231,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-28",
+     "recorded": true,
+     "bed": "23:32",
+     "wake": "6:17",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5358,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-29",
+     "recorded": true,
+     "bed": "23:38",
+     "wake": "6:26",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 4787,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-07-30",
+     "recorded": true,
+     "bed": "23:32",
+     "wake": "6:15",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 7872,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    }
+   ],
+   "reportNote": "期間1「知る」"
+  },
+  {
+   "label": "2か月目",
+   "periodStart": "2026-07-31",
+   "periodEnd": "2026-08-29",
+   "days": [
+    {
+     "d": "2026-07-31",
+     "recorded": true,
+     "bed": "0:25",
+     "wake": "6:07",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5159,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-08-01",
+     "recorded": true,
+     "bed": "0:09",
+     "wake": "7:30",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 9656,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-08-02",
+     "recorded": true,
+     "bed": "23:20",
+     "wake": "7:39",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5233,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-03",
+     "recorded": true,
+     "bed": "22:32",
+     "wake": "6:22",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6884,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-04",
+     "recorded": true,
+     "bed": "23:12",
+     "wake": "6:23",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5933,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-05",
+     "recorded": true,
+     "bed": "22:33",
+     "wake": "6:37",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7594,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-06",
+     "recorded": true,
+     "bed": "23:02",
+     "wake": "6:26",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 10118,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-07",
+     "recorded": true,
+     "bed": "0:09",
+     "wake": "6:29",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 6306,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-08-08",
+     "recorded": true,
+     "bed": "23:33",
+     "wake": "7:26",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9532,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-09",
+     "recorded": true,
+     "bed": "22:44",
+     "wake": "7:18",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 6389,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-10",
+     "recorded": true,
+     "bed": "22:48",
+     "wake": "6:38",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 6621,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-11",
+     "recorded": true,
+     "bed": "22:59",
+     "wake": "6:34",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 8954,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-12",
+     "recorded": false
+    },
+    {
+     "d": "2026-08-13",
+     "recorded": false
+    },
+    {
+     "d": "2026-08-14",
+     "recorded": false
+    },
+    {
+     "d": "2026-08-15",
+     "recorded": false
+    },
+    {
+     "d": "2026-08-16",
+     "recorded": true,
+     "bed": "22:34",
+     "wake": "7:25",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 8267,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-17",
+     "recorded": true,
+     "bed": "23:06",
+     "wake": "6:14",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 6809,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-18",
+     "recorded": true,
+     "bed": "22:31",
+     "wake": "6:29",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 8191,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-19",
+     "recorded": true,
+     "bed": "22:40",
+     "wake": "6:30",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 6899,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-20",
+     "recorded": true,
+     "bed": "23:37",
+     "wake": "6:18",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 8034,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-21",
+     "recorded": true,
+     "bed": "23:47",
+     "wake": "6:17",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7278,
+     "exercise": false,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-22",
+     "recorded": true,
+     "bed": "23:42",
+     "wake": "7:25",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9766,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-23",
+     "recorded": true,
+     "bed": "23:08",
+     "wake": "7:49",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6017,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-24",
+     "recorded": true,
+     "bed": "23:16",
+     "wake": "6:20",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6125,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-25",
+     "recorded": true,
+     "bed": "22:31",
+     "wake": "6:28",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 9453,
+     "exercise": true,
+     "careAM": "△",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-26",
+     "recorded": true,
+     "bed": "23:20",
+     "wake": "6:31",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5298,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-27",
+     "recorded": true,
+     "bed": "23:11",
+     "wake": "6:34",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 8010,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-28",
+     "recorded": true,
+     "bed": "23:30",
+     "wake": "6:38",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 9277,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-29",
+     "recorded": true,
+     "bed": "23:52",
+     "wake": "7:34",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 8577,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "△"
+    }
+   ],
+   "reportNote": "期間2「試す」：平日の入床時刻の目安を記録"
+  },
+  {
+   "label": "3か月目",
+   "periodStart": "2026-08-30",
+   "periodEnd": "2026-09-28",
+   "days": [
+    {
+     "d": "2026-08-30",
+     "recorded": true,
+     "bed": "22:34",
+     "wake": "7:39",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4386,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-08-31",
+     "recorded": true,
+     "bed": "22:43",
+     "wake": "6:28",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 6495,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-01",
+     "recorded": true,
+     "bed": "22:32",
+     "wake": "6:23",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6964,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "—"
+    },
+    {
+     "d": "2026-09-02",
+     "recorded": true,
+     "bed": "22:16",
+     "wake": "6:39",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 4382,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-03",
+     "recorded": true,
+     "bed": "22:33",
+     "wake": "6:23",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9752,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-04",
+     "recorded": true,
+     "bed": "23:45",
+     "wake": "6:28",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 4702,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-05",
+     "recorded": true,
+     "bed": "23:59",
+     "wake": "7:18",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 6012,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-09-06",
+     "recorded": true,
+     "bed": "22:16",
+     "wake": "7:38",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7144,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-07",
+     "recorded": true,
+     "bed": "22:26",
+     "wake": "6:16",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 4791,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "—"
+    },
+    {
+     "d": "2026-09-08",
+     "recorded": true,
+     "bed": "23:33",
+     "wake": "6:27",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 7980,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-09",
+     "recorded": true,
+     "bed": "22:30",
+     "wake": "6:25",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5495,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-10",
+     "recorded": true,
+     "bed": "23:05",
+     "wake": "6:28",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 8582,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-11",
+     "recorded": true,
+     "bed": "23:44",
+     "wake": "6:17",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 6989,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-12",
+     "recorded": true,
+     "bed": "23:22",
+     "wake": "7:36",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7046,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-13",
+     "recorded": true,
+     "bed": "22:38",
+     "wake": "7:33",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 6442,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-14",
+     "recorded": true,
+     "bed": "22:57",
+     "wake": "6:16",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 2
+     },
+     "steps": 7415,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-15",
+     "recorded": true,
+     "bed": "22:49",
+     "wake": "6:18",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 2
+     },
+     "steps": 9581,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-16",
+     "recorded": true,
+     "bed": "22:37",
+     "wake": "6:18",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 4550,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-17",
+     "recorded": true,
+     "bed": "23:44",
+     "wake": "6:09",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 9391,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-18",
+     "recorded": true,
+     "bed": "0:15",
+     "wake": "6:14",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5738,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "△"
+    },
+    {
+     "d": "2026-09-19",
+     "recorded": true,
+     "bed": "23:22",
+     "wake": "7:36",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 9036,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-20",
+     "recorded": true,
+     "bed": "23:06",
+     "wake": "7:47",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5640,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-21",
+     "recorded": true,
+     "bed": "23:09",
+     "wake": "6:28",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5264,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-22",
+     "recorded": true,
+     "bed": "23:01",
+     "wake": "6:34",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 8020,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-23",
+     "recorded": true,
+     "bed": "23:07",
+     "wake": "6:09",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 5137,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-24",
+     "recorded": true,
+     "bed": "22:32",
+     "wake": "6:22",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 9591,
+     "exercise": true,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-25",
+     "recorded": true,
+     "bed": "23:30",
+     "wake": "6:29",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 7492,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-26",
+     "recorded": false
+    },
+    {
+     "d": "2026-09-27",
+     "recorded": true,
+     "bed": "22:15",
+     "wake": "7:23",
+     "wakeFeel": "○",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 2,
+      "l": 2,
+      "d": 3
+     },
+     "steps": 5114,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    },
+    {
+     "d": "2026-09-28",
+     "recorded": true,
+     "bed": "23:05",
+     "wake": "6:10",
+     "wakeFeel": "◎",
+     "meals": {
+      "b": true,
+      "l": true,
+      "d": true
+     },
+     "balance": {
+      "b": 1,
+      "l": 3,
+      "d": 3
+     },
+     "steps": 4816,
+     "exercise": false,
+     "careAM": "✓",
+     "carePM": "✓"
+    }
+   ],
+   "reportNote": "期間3「定着させる」"
+  }
+ ],
+ "text": {
+  "overview": "90日間のうち{{recorded}}日に記録がありました。記録がなかったのは、お盆の帰省中の4日間を含む8日間です。1か月目は生活を変えずに記録し、2か月目からは「平日は24時までに寝床に入る」ことを試す項目として記録しています。",
+  "continued": [
+   "朝のスキンケアの記録は、90日を通して高い割合で ✓ がついています。",
+   "2か月目に試した「平日は24時までに寝床に入る」は、3か月目も同じ列で記録が続いています。",
+   "意識して運動した日の記録は、火曜・木曜・土曜を中心に続いています。"
+  ],
+  "trends": [
+   "寝床に入った時刻の平均は、記録上、1か月目から3か月目にかけて少しずつ早くなっています。",
+   "目覚めが◎の日は、寝床に入った時刻が早い日に多く記録される傾向が、3か月を通して見られます。",
+   "記録がなかった日は、帰省や予定の多い時期に集中していました。"
+  ],
+  "goals": [
+   "平日の入床時刻の記録を、引き続き30日記録シートで続ける（時刻型）",
+   "週末の起床時刻を記録し、平日との差を月に1回見返す（記録型）",
+   "意識して運動した日に印をつける記録を、週3日を目安に続ける（回数型）"
+  ],
+  "summary": "90日間、記録を続けてこられました。1か月目に見えた「寝床に入る時刻と目覚めの感覚」の関係をもとに、2か月目から平日の入床時刻を試す項目として記録し、3か月目もその記録が続いています。ここに整理したのは記録から数えられる事実であり、今後どの項目を続けるかはご自身で選んでください。記録の形式は、これからも同じシートで続けられます。"
+ }
+}

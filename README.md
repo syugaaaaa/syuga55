@@ -7,11 +7,11 @@ GitHub（Private リポジトリ）と Netlify で運用します。
 
 | ファイル | 内容 |
 |---|---|
-| `docs/01_GitHub反映手順.md` | リポジトリへのアップロード、削除が必要なファイル |
-| `docs/03_Netlify環境変数設定手順.md` | Netlify のサイト作成、`SESSION_SECRET`、Forms、管理用の値 |
-| `docs/02_管理者向け運用マニュアル.md` | 申込み〜入金確認〜会員発行〜レポート納品、会員管理、記事の更新、メール文例 |
-| `docs/04_実装状況と公開前チェックリスト.md` | 実装済み・未検証・未実装の一覧、公開前の確認事項 |
-| `docs/申込管理台帳.csv` | 申込み状況を管理する台帳のひな形 |
+| `docs/01_github-upload.md` | リポジトリへのアップロード、削除が必要なファイル |
+| `docs/03_netlify-settings.md` | Netlify のサイト作成、`SESSION_SECRET`、Forms、管理用の値 |
+| `docs/02_admin-manual.md` | 申込み〜入金確認〜会員発行〜レポート納品、会員管理、記事の更新、メール文例 |
+| `docs/04_status-checklist.md` | 実装済み・未検証・未実装の一覧、公開前の確認事項 |
+| `docs/application-ledger.csv` | 申込み状況を管理する台帳のひな形 |
 
 ## しくみ
 
@@ -32,7 +32,7 @@ GitHub（Private リポジトリ）と Netlify で運用します。
 ```bash
 npm install          # 初回のみ
 npm run build        # サイトを生成（公開前の確認事項があれば警告を表示）
-npm test             # 会員認証の自動テスト（build のあとに実行）
+npm test             # 会員認証の自動テスト（build のあとに実行・42項目）
 npm run member -- …      # 会員の登録・期限変更・パスワード再発行
 npm run report -- …      # 個別レポートの掲載
 npm run submissions -- … # 提出された記録の確認

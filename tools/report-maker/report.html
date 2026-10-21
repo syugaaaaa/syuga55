@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>振り返りレポート作成ツール｜SUGAR RUSH（管理者用・ローカルで使用）</title>
+<!--
+  使い方（docs/02_admin-manual.md「レポートの作り方」参照）
+  1. このファイルをパソコンのブラウザ（Chrome推奨）で開きます。インターネット接続は不要です。
+  2. 右上の入力欄に、会員の記録を入力したJSONを貼り付けて「表示」を押します。
+     （sample-monthly.json / sample-90days.json が入力例です）
+  3. 「印刷・PDF保存」→ 送信先「PDFに保存」、用紙A4、余白なし、背景のグラフィックをオン で保存します。
+  4. 保存したPDFを npm run report -- upload で会員ページに掲載します。
+  このファイルはサイトには公開されません（tools/ はビルド対象外）。
+-->
+<style>
+@page { size: A4; margin: 0; }
+:root { --sage:#48675D; --sage-l:#E8EEE8; --ivory:#FAF8F3; --rose:#B88783; --ink:#333B37; --soft:#5B635F; --champ:#D9C8AD; --line:#D8DED8; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #E9E6DE; color: var(--ink); font-family: "Noto Sans CJK JP", "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 210mm; height: 297mm; margin: 10mm auto; background: #fff; padding: 16mm 17mm 14mm; position: relative; overflow: hidden; page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.mincho { font-family: "Noto Serif CJK JP", "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; }
+.latin { font-family: "Lora", "Cormorant Garamond", Georgia, serif; font-style: italic; }
+h1, h2, h3 { font-family: "Noto Serif CJK JP", "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 600; margin: 0; letter-spacing: .06em; }
+h2 { font-size: 13.5pt; margin: 0 0 3.2mm; padding-left: 3.2mm; border-left: 1mm solid var(--sage); line-height: 1.4; }
+h2 .no { font-family: "Lora", Georgia, serif; color: var(--rose); margin-right: 2mm; font-weight: 500; }
+p, li, td, th { font-size: 9.6pt; line-height: 1.75; }
+.sec { margin-bottom: 7mm; }
+.head { display: flex; justify-content: space-between; align-items: center; border-bottom: .3mm solid var(--line); padding-bottom: 2.5mm; margin-bottom: 7mm; font-size: 8pt; color: var(--soft); }
+.head .brand { display: flex; align-items: center; gap: 2mm; letter-spacing: .14em; }
+.foot { position: absolute; left: 17mm; right: 17mm; bottom: 8mm; display: flex; justify-content: space-between; font-size: 7.4pt; color: var(--soft); border-top: .3mm solid var(--line); padding-top: 2mm; }
+.sample-band { z-index: 5; position: absolute; top: 0; left: 0; right: 0; background: var(--rose); color: #fff; text-align: center; font-size: 8.6pt; letter-spacing: .2em; padding: 1.3mm 0; }
+.sample-mark { z-index: 4; position: absolute; right: 12mm; top: 120mm; transform: rotate(-18deg); font-size: 46pt; color: rgba(184,135,131,.11); font-weight: 700; letter-spacing: .2em; pointer-events: none; font-family: "Noto Serif CJK JP", serif; }
+.cover { background: var(--ivory); margin: -16mm -17mm 8mm; padding: 22mm 17mm 12mm; position: relative; }
+.cover .kind { font-size: 9pt; color: var(--sage); letter-spacing: .2em; }
+.cover h1 { font-size: 24pt; margin-top: 3mm; font-weight: 500; }
+.cover dl { display: grid; grid-template-columns: 24mm 1fr; gap: 1mm 4mm; margin: 7mm 0 0; font-size: 9.6pt; }
+.cover dt { color: var(--soft); }
+.cover dd { margin: 0; font-weight: 700; }
+.cover svg.deco { position: absolute; right: 0; top: 6mm; width: 95mm; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: .3mm solid var(--line); padding: 1.6mm 2mm; text-align: left; vertical-align: top; }
+th { background: var(--sage-l); font-weight: 700; white-space: nowrap; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.big { display: flex; align-items: baseline; gap: 2mm; }
+.big b { font-family: "Lora", Georgia, serif; font-size: 34pt; color: var(--sage); font-weight: 500; line-height: 1; }
+.big span { font-size: 10pt; color: var(--soft); }
+.row { display: grid; grid-template-columns: 52mm 1fr; gap: 8mm; align-items: center; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+.chart { width: 100%; height: auto; display: block; }
+.cap { font-size: 8pt; color: var(--soft); margin: 1mm 0 0; }
+ul.dots { margin: 0; padding-left: 4.5mm; }
+ul.dots li { margin: .8mm 0; }
+ul.dots li::marker { color: var(--rose); }
+ul.checks { list-style: none; margin: 0; padding: 0; }
+ul.checks li { padding-left: 7mm; position: relative; margin: 1.6mm 0; }
+ul.checks li::before { content: ""; position: absolute; left: 0; top: 1.4mm; width: 3.6mm; height: 3.6mm; border: .35mm solid var(--sage); border-radius: .6mm; }
+.box { border: .3mm solid var(--line); border-radius: 2mm; padding: 4mm 5mm; background: #fff; }
+.box.tint { background: var(--ivory); border-color: var(--champ); }
+.note { font-size: 8pt; color: var(--soft); line-height: 1.7; }
+/* 入力パネル（印刷されません） */
+.panel { position: fixed; right: 12px; top: 12px; width: 360px; background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 12px; font-size: 13px; box-shadow: 0 6px 24px rgba(0,0,0,.15); z-index: 10; }
+.panel textarea { width: 100%; height: 220px; font-family: monospace; font-size: 11px; }
+.panel button { margin: 6px 6px 0 0; padding: 6px 12px; }
+.panel .err { color: #a33; white-space: pre-wrap; }
+@media print { body { background: #fff; } .page { margin: 0; } .panel { display: none; } }
+@media screen and (max-width: 1100px) { .panel { position: static; width: auto; margin: 10px; } }
+</style>
+</head>
+<body>
+<div class="panel" id="panel">
+  <b>振り返りレポート作成（管理者用）</b>
+  <p style="margin:6px 0">記録データ（JSON）を貼り付けて「表示」を押してください。</p>
+  <textarea id="json" spellcheck="false"></textarea>
+  <div><button id="render">表示</button><button onclick="window.print()">印刷・PDF保存</button></div>
+  <p class="err" id="err"></p>
+</div>
+<div id="report"></div>
+<script>
+"use strict";
+// ---------- 共通 ----------
+const C = { sage: "#48675D", sageL: "#E8EEE8", rose: "#B88783", champ: "#D9C8AD", ink: "#333B37", soft: "#5B635F", line: "#D8DED8" };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const jdate = (ymd) => { if (!ymd) return ""; const [y, m, d] = ymd.split("-").map(Number); return `${y}年${m}月${d}日`; };
+const toMin = (t, night) => { if (!t) return null; const [h, m] = t.split(":").map(Number); let v = h * 60 + m; if (night && v < 12 * 60) v += 24 * 60; return v; };
+const fmtMin = (v) => { if (v == null || isNaN(v)) return "—"; v = Math.round(v) % (24 * 60); return `${Math.floor(v / 60)}:${String(v % 60).padStart(2, "0")}`; };
+const avg = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
+const pct = (n, d) => (d ? Math.round((n / d) * 100) : 0);
+const logo = `<svg viewBox="0 0 48 48" width="16" height="16"><path d="M33.5 13.5c-3.6-4.4-15.4-4.6-16.6 2.4-1.3 7.6 17.3 7.4 16.4 15.6-.8 7.2-13.7 8.3-18.8 3" fill="none" stroke="#48675D" stroke-width="3" stroke-linecap="round"/><circle cx="33.5" cy="13.5" r="2.6" fill="#B88783"/></svg>`;
+const deco = `<svg class="deco" viewBox="0 0 360 160" fill="none"><path d="M0 150C90 140 120 70 200 62S320 20 360 6" stroke="#48675D" stroke-opacity=".45"/><path d="M20 160C120 150 160 100 230 96S330 64 360 52" stroke="#48675D" stroke-opacity=".2"/>${[40, 90, 140, 190, 240, 290].map((x, i) => `<circle cx="${x}" cy="${150 - x * 0.39 - (i % 2) * 4}" r="2.4" fill="#48675D" fill-opacity=".5"/>`).join("")}<circle cx="340" cy="13" r="3.6" fill="#B88783"/></svg>`;
+
+// ---------- 集計 ----------
+function stats(days) {
+  const rec = days.filter((d) => d.recorded);
+  const bed = rec.map((d) => toMin(d.bed, true)).filter((v) => v != null);
+  const wake = rec.map((d) => toMin(d.wake, false)).filter((v) => v != null);
+  const steps = rec.map((d) => d.steps).filter((v) => typeof v === "number");
+  const meals = []; rec.forEach((d) => ["b", "l", "d"].forEach((k) => { if (d.meals && d.meals[k] != null) meals.push({ k, eaten: d.meals[k], bal: d.balance ? d.balance[k] : null }); }));
+  const eaten = meals.filter((m) => m.eaten);
+  const sleepRec = rec.filter((d) => d.bed || d.wake);
+  // 1行＝その日の朝の起床とその日の夜の就寝。睡眠は「i日目の就寝〜i+1日目の起床」で組み合わせる
+  const inBed = []; for (let i = 0; i < days.length - 1; i++) { const a = days[i], z = days[i + 1]; if (!a.recorded || !z.recorded) continue; const b = toMin(a.bed, true), w = toMin(z.wake, false); if (b != null && w != null) inBed.push(w + 24 * 60 - b); }
+  return {
+    total: days.length, recorded: rec.length,
+    sleepDays: sleepRec.length, avgBed: fmtMin(avg(bed)), avgWake: fmtMin(avg(wake)),
+    avgInBed: inBed.length ? (avg(inBed) / 60).toFixed(1) : "—",
+    wakeGood: rec.filter((d) => d.wakeFeel === "◎").length,
+    stepDays: steps.length, avgSteps: steps.length ? Math.round(avg(steps)).toLocaleString("ja-JP") : "—", avgStepsN: steps.length ? avg(steps) : 0,
+    exDays: rec.filter((d) => d.exercise).length,
+    mealDays: rec.filter((d) => d.meals).length, mealsEaten: eaten.length,
+    balanced: eaten.filter((m) => m.bal === 3).length,
+    bfSkip: meals.filter((m) => m.k === "b" && m.eaten === false).length,
+    careAM: rec.filter((d) => d.careAM === "✓").length, carePM: rec.filter((d) => d.carePM === "✓").length,
+    carePartial: rec.filter((d) => d.careAM === "△" || d.carePM === "△").length,
+  };
+}
+function fill(text, s) { return esc(text).replace(/\{\{(\w+)\}\}/g, (m, k) => (s[k] != null ? esc(s[k]) : m)); }
+
+// ---------- グラフ（SVG） ----------
+function barChart({ labels, values, max, w = 520, h = 150, unit = "", color = C.sage, highlightLast = false }) {
+  const pad = { l: 30, r: 8, t: 14, b: 24 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b;
+  const n = values.length, bw = Math.min(46, (iw / n) * 0.62);
+  max = max || Math.max(1, ...values);
+  let g = "";
+  for (let i = 0; i <= 4; i++) { const y = pad.t + ih - (ih * i) / 4; g += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y}" y2="${y}" stroke="${C.line}" stroke-width=".6"/><text x="${pad.l - 4}" y="${y + 3}" font-size="8" text-anchor="end" fill="${C.soft}">${Math.round((max * i) / 4)}</text>`; }
+  values.forEach((v, i) => {
+    const x = pad.l + (iw / n) * i + (iw / n - bw) / 2, bh = (ih * v) / max, y = pad.t + ih - bh;
+    g += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${highlightLast && i === n - 1 ? C.rose : color}"/><text x="${x + bw / 2}" y="${y - 3}" font-size="8.5" text-anchor="middle" fill="${C.ink}">${v}${unit}</text><text x="${x + bw / 2}" y="${h - 8}" font-size="8.5" text-anchor="middle" fill="${C.soft}">${esc(labels[i])}</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+}
+function hbar({ rows, w = 520 }) {
+  const rh = 22, h = rows.length * rh + 10, l = 150, iw = w - l - 50;
+  let g = "";
+  rows.forEach((r, i) => {
+    const y = 6 + i * rh, v = Math.max(0, Math.min(100, r.value));
+    g += `<text x="0" y="${y + 12}" font-size="9" fill="${C.ink}">${esc(r.label)}</text><rect x="${l}" y="${y + 3}" width="${iw}" height="11" rx="5.5" fill="${C.sageL}"/><rect x="${l}" y="${y + 3}" width="${(iw * v) / 100}" height="11" rx="5.5" fill="${r.color || C.sage}"/><text x="${l + iw + 6}" y="${y + 12}" font-size="9" fill="${C.ink}">${v}%</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+}
+function sleepChart(days, w = 520, h = 170) {
+  // 寝床にいた時間帯（20時〜翌10時）を日ごとの縦棒で
+  const pad = { l: 34, r: 6, t: 8, b: 20 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b;
+  const top = 20 * 60, bottom = 34 * 60, n = days.length, bw = (iw / n) * 0.6;
+  const yOf = (m) => pad.t + ((m - top) / (bottom - top)) * ih;
+  let g = "";
+  for (let hr = 20; hr <= 34; hr += 2) { const y = yOf(hr * 60); g += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y}" y2="${y}" stroke="${C.line}" stroke-width=".6"/><text x="${pad.l - 4}" y="${y + 3}" font-size="8" text-anchor="end" fill="${C.soft}">${hr % 24}時</text>`; }
+  days.forEach((d, i) => {
+    const x = pad.l + (iw / n) * i + (iw / n - bw) / 2;
+    const nx = days[i + 1];
+    const b = toMin(d.bed, true), wk = nx && nx.recorded ? toMin(nx.wake, false) : null;
+    if (d.recorded && b != null && wk != null) {
+      g += `<rect x="${x}" y="${yOf(b)}" width="${bw}" height="${yOf(wk + 24 * 60) - yOf(b)}" rx="${bw / 2}" fill="${nx.wakeFeel === "◎" ? C.sage : nx.wakeFeel === "△" ? C.champ : "#7E978F"}"/>`;
+    } else {
+      g += `<circle cx="${x + bw / 2}" cy="${pad.t + ih / 2}" r="1.4" fill="${C.line}"/>`;
+    }
+    if (i % 5 === 0) g += `<text x="${x + bw / 2}" y="${h - 6}" font-size="8" text-anchor="middle" fill="${C.soft}">${i + 1}</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg><p class="cap">縦棒：その日の夜に寝床に入った時刻〜翌朝起きた時刻（自己記録）。色は翌朝の目覚め：<span style="color:${C.sage}">■</span>目覚め◎ <span style="color:#7E978F">■</span>○ <span style="color:${C.champ}">■</span>△　点：記録なし　横軸：日目</p>`;
+}
+function stepsChart(days, w = 520, h = 120) {
+  const pad = { l: 34, r: 6, t: 8, b: 18 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b, n = days.length, bw = (iw / n) * 0.6;
+  const vals = days.map((d) => (d.recorded && typeof d.steps === "number" ? d.steps : null));
+  const max = Math.max(4000, ...vals.filter((v) => v != null)) * 1.1;
+  let g = "";
+  for (let i = 0; i <= 3; i++) { const v = (max * i) / 3, y = pad.t + ih - (ih * i) / 3; g += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y}" y2="${y}" stroke="${C.line}" stroke-width=".6"/><text x="${pad.l - 4}" y="${y + 3}" font-size="8" text-anchor="end" fill="${C.soft}">${Math.round(v / 1000)}千</text>`; }
+  vals.forEach((v, i) => {
+    const x = pad.l + (iw / n) * i + (iw / n - bw) / 2;
+    if (v != null) g += `<rect x="${x}" y="${pad.t + ih - (ih * v) / max}" width="${bw}" height="${(ih * v) / max}" rx="1.5" fill="${days[i].exercise ? C.rose : C.sage}" fill-opacity=".85"/>`;
+    if (i % 5 === 0) g += `<text x="${x + bw / 2}" y="${h - 5}" font-size="8" text-anchor="middle" fill="${C.soft}">${i + 1}</text>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg><p class="cap">歩数（自己記録）。<span style="color:${C.rose}">■</span>は意識して運動した日。横軸：日目</p>`;
+}
+
+function timeChart(labels, mins, w = 250, h = 130) {
+  // 時刻（分）を、早いほど上になる点と線で表示（目盛り 4時〜10時）
+  const pad = { l: 34, r: 10, t: 12, b: 20 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b, lo = 4 * 60, hi = 10 * 60, n = labels.length;
+  const y = (m) => pad.t + ((m - lo) / (hi - lo)) * ih, x = (i) => pad.l + (iw / n) * (i + 0.5);
+  let g = "";
+  for (let hr = 4; hr <= 10; hr += 2) g += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y(hr * 60)}" y2="${y(hr * 60)}" stroke="${C.line}" stroke-width=".6"/><text x="${pad.l - 4}" y="${y(hr * 60) + 3}" font-size="8" text-anchor="end" fill="${C.soft}">${hr}時</text>`;
+  const pts = mins.map((m, i) => (m == null ? null : [x(i), y(m)]));
+  const line = pts.filter(Boolean).map((p) => p.join(",")).join(" ");
+  g += `<polyline points="${line}" fill="none" stroke="${C.sage}" stroke-width="1.2"/>`;
+  pts.forEach((p, i) => { if (p) g += `<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="${i === n - 1 ? C.rose : C.sage}"/><text x="${p[0]}" y="${p[1] - 6}" font-size="8.5" text-anchor="middle" fill="${C.ink}">${fmtMin(mins[i])}</text>`; g += `<text x="${x(i)}" y="${h - 6}" font-size="8.5" text-anchor="middle" fill="${C.soft}">${esc(labels[i])}</text>`; });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+}
+
+// ---------- ページ部品 ----------
+function shell(data, pageNo, pageTotal, inner, { cover = false } = {}) {
+  return `<section class="page">${data.sample ? `<div class="sample-band">架空サンプル ― 実在の人物・記録ではありません</div><div class="sample-mark">SAMPLE</div>` : ""}
+${cover ? "" : `<div class="head"><span class="brand">${logo}SUGAR RUSH</span><span>${esc(data.title || "")}｜${esc(data.memberName)} 様</span></div>`}
+${inner}
+<div class="foot"><span>合同会社シュガーラッシュ｜本レポートは記録内容を整理した資料であり、医学的な判断・診断・指示を含むものではありません。</span><span>${pageNo} / ${pageTotal}</span></div></section>`;
+}
+function coverBlock(data, kindLabel) {
+  return `<div class="cover">${deco}<div class="kind">${esc(kindLabel)}</div><h1>${esc(data.title)}</h1>
+<dl><dt>お名前</dt><dd>${esc(data.memberName)} 様（会員ID ${esc(data.memberId)}）</dd><dt>プラン</dt><dd>${esc(data.plan)}</dd><dt>対象期間</dt><dd>${jdate(data.periodStart)} 〜 ${jdate(data.periodEnd)}</dd><dt>発行日</dt><dd>${jdate(data.issued)}</dd></dl></div>`;
+}
+function weekly(days) {
+  const labels = [], vals = [];
+  for (let i = 0; i < days.length; i += 7) { const w = days.slice(i, i + 7); labels.push(`${i + 1}〜${i + w.length}日`); vals.push(w.filter((d) => d.recorded).length); }
+  return { labels, vals };
+}
+
+// ---------- 月間レポート ----------
+function monthly(data) {
+  const s = stats(data.days), wk = weekly(data.days), T = data.text || {}, P = 3;
+  const p1 = shell(data, 1, P, `${coverBlock(data, "月間振り返りレポート" + (data.round ? `（${data.round}回目）` : ""))}
+<div class="sec"><h2><span class="no">1</span>記録実施日数</h2>
+<div class="row"><div class="big"><b>${s.recorded}</b><span>／ ${s.total}日</span></div>${barChart({ labels: wk.labels, values: wk.vals, max: 7, h: 130, unit: "日" })}</div>
+<p class="cap">一部でも記録があった日を「記録した日」として数えています。</p></div>
+<div class="sec"><h2><span class="no">2</span>分野ごとの記録状況</h2>
+<table><thead><tr><th>分野</th><th>記録した日数</th><th>記録から数えた内容</th></tr></thead><tbody>
+<tr><td>睡眠</td><td class="num">${s.sleepDays}日</td><td>寝床に入った時刻の平均 ${s.avgBed}／起きた時刻の平均 ${s.avgWake}／寝床にいた時間の平均 約${s.avgInBed}時間／目覚め◎ ${s.wakeGood}日</td></tr>
+<tr><td>運動・活動</td><td class="num">${s.stepDays}日</td><td>歩数の平均 ${s.avgSteps}歩（記録した日）／意識して運動した日 ${s.exDays}日</td></tr>
+<tr><td>食生活</td><td class="num">${s.mealDays}日</td><td>記録した食事 ${s.mealsEaten}回のうち、主食・主菜・副菜がそろった食事 ${s.balanced}回／朝食「—」${s.bfSkip}回</td></tr>
+<tr><td>美容習慣</td><td class="num">${s.recorded}日</td><td>朝ケア ✓ ${s.careAM}日／夜ケア ✓ ${s.carePM}日／一部省いた（△）日 ${s.carePartial}日</td></tr>
+</tbody></table></div>`, { cover: true });
+  const p2 = shell(data, 2, P, `<div class="sec"><h2><span class="no">3</span>記録内容のグラフ</h2>
+<h3 class="mincho" style="font-size:10.5pt;margin:2mm 0 1mm">寝床にいた時間帯と目覚めの感覚</h3>${sleepChart(data.days)}
+<h3 class="mincho" style="font-size:10.5pt;margin:4mm 0 1mm">歩数と運動</h3>${stepsChart(data.days)}
+<h3 class="mincho" style="font-size:10.5pt;margin:4mm 0 1mm">習慣ごとの記録の割合（記録した日に対する割合）</h3>${hbar({ rows: [
+    { label: "目覚め◎", value: pct(s.wakeGood, s.sleepDays) },
+    { label: "意識して運動した日", value: pct(s.exDays, s.recorded) },
+    { label: "主食・主菜・副菜がそろった食事", value: pct(s.balanced, s.mealsEaten), color: C.rose },
+    { label: "朝ケア ✓", value: pct(s.careAM, s.recorded) },
+    { label: "夜ケア ✓", value: pct(s.carePM, s.recorded) },
+  ] })}</div>
+<div class="sec"><h2><span class="no">4</span>生活習慣の傾向</h2><ul class="dots">${(T.trend || []).map((t) => `<li>${fill(t, s)}</li>`).join("")}</ul></div>`);
+  const p3 = shell(data, 3, P, `<div class="sec"><h2><span class="no">5</span>継続できた取り組み</h2><ul class="dots">${(T.continued || []).map((t) => `<li>${fill(t, s)}</li>`).join("")}</ul></div>
+<div class="sec"><h2><span class="no">6</span>次月に向けた振り返り項目</h2><p>次の項目を、翌月の記録目標整理シートで検討してください。チェック欄は、検討したら印をつけるためのものです。</p><ul class="checks">${(T.nextItems || []).map((t) => `<li>${fill(t, s)}</li>`).join("")}</ul></div>
+<div class="sec"><h2><span class="no">7</span>まとめ</h2><div class="box tint"><p style="margin:0">${fill(T.summary || "", s)}</p></div></div>
+<p class="note">本レポートは、会員ご本人が記録した内容を集計・整理したものです。健康状態の評価、病気の判断、減量・食事制限などの指示は含みません。体調についてご不安がある場合は、医療機関にご相談ください。</p>`);
+  return p1 + p2 + p3;
+}
+
+// ---------- 90日総括レポート ----------
+function total90(data) {
+  const M = data.months.map((m) => ({ ...m, s: stats(m.days) }));
+  const all = stats(M.flatMap((m) => m.days));
+  const T = data.text || {}, P = 4;
+  const grouped = (w = 520, h = 170) => {
+    const keys = [["目覚め◎", (s) => pct(s.wakeGood, s.sleepDays)], ["運動した日", (s) => pct(s.exDays, s.recorded)], ["3つそろった食事", (s) => pct(s.balanced, s.mealsEaten)], ["朝ケア✓", (s) => pct(s.careAM, s.recorded)], ["夜ケア✓", (s) => pct(s.carePM, s.recorded)]];
+    const pad = { l: 30, r: 8, t: 10, b: 34 }, iw = w - pad.l - pad.r, ih = h - pad.t - pad.b, gw = iw / keys.length, cols = [C.champ, "#7E978F", C.sage];
+    let g = "";
+    for (let i = 0; i <= 4; i++) { const y = pad.t + ih - (ih * i) / 4; g += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${y}" y2="${y}" stroke="${C.line}" stroke-width=".6"/><text x="${pad.l - 4}" y="${y + 3}" font-size="8" text-anchor="end" fill="${C.soft}">${25 * i}%</text>`; }
+    keys.forEach(([label, f], ki) => {
+      M.forEach((m, mi) => { const v = f(m.s), bw = gw * 0.2, x = pad.l + gw * ki + gw * 0.15 + mi * bw * 1.15, bh = (ih * v) / 100; g += `<rect x="${x}" y="${pad.t + ih - bh}" width="${bw}" height="${bh}" rx="1.5" fill="${cols[mi]}"/>`; });
+      g += `<text x="${pad.l + gw * ki + gw / 2}" y="${h - 20}" font-size="8.5" text-anchor="middle" fill="${C.ink}">${label}</text>`;
+    });
+    g += M.map((m, mi) => `<rect x="${pad.l + mi * 90}" y="${h - 10}" width="8" height="8" fill="${cols[mi]}"/><text x="${pad.l + 12 + mi * 90}" y="${h - 3}" font-size="8.5" fill="${C.soft}">${esc(m.label)}</text>`).join("");
+    return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+  };
+  const p1 = shell(data, 1, P, `${coverBlock(data, "90日総括レポート")}
+<div class="sec"><h2><span class="no">1</span>90日間の記録概要</h2>
+<div class="row"><div class="big"><b>${all.recorded}</b><span>／ ${all.total}日</span></div><div><p style="margin:0">${fill(T.overview || "", all)}</p></div></div></div>
+<div class="sec"><h2><span class="no">2</span>月別の記録実施状況</h2>
+<div class="row"><div>${barChart({ labels: M.map((m) => m.label), values: M.map((m) => m.s.recorded), max: 31, w: 260, h: 150, unit: "日", highlightLast: true })}</div>
+<table><thead><tr><th>期間</th><th>記録した日</th><th>月間レポート</th></tr></thead><tbody>${M.map((m) => `<tr><td>${esc(m.label)}<br><span class="note">${jdate(m.periodStart)}〜${jdate(m.periodEnd)}</span></td><td class="num">${m.s.recorded}／${m.s.total}日</td><td>${esc(m.reportNote || "")}</td></tr>`).join("")}</tbody></table></div></div>`, { cover: true });
+  const p2 = shell(data, 2, P, `<div class="sec"><h2><span class="no">3</span>習慣の変化を示すグラフ</h2>
+<h3 class="mincho" style="font-size:10.5pt;margin:2mm 0 1mm">習慣ごとの記録の割合（月別）</h3>${grouped()}
+<p class="cap">記録した日（食事は記録した食事）に対する割合。記録されていない日は含めていません。</p>
+<div class="cols2" style="margin-top:4mm"><div><h3 class="mincho" style="font-size:10.5pt;margin:0 0 1mm">起きた時刻の平均</h3>${timeChart(M.map((m) => m.label), M.map((m) => { const v = m.days.filter((d) => d.recorded).map((d) => toMin(d.wake)).filter((x) => x != null); return v.length ? avg(v) : null; }))}</div>
+<div><h3 class="mincho" style="font-size:10.5pt;margin:0 0 1mm">歩数の平均（記録した日）</h3>${barChart({ labels: M.map((m) => m.label), values: M.map((m) => Math.round(m.s.avgStepsN)), w: 250, h: 130 })}</div></div></div>`);
+  const p3 = shell(data, 3, P, `<div class="sec"><h2><span class="no">4</span>継続しやすかった取り組み</h2><ul class="dots">${(T.continued || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>
+<div class="sec"><h2><span class="no">5</span>記録から確認できた傾向</h2><table><thead><tr><th>分野</th><th>1か月目</th><th>2か月目</th><th>3か月目</th></tr></thead><tbody>
+<tr><td>寝床に入った時刻の平均</td>${M.map((m) => `<td class="num">${m.s.avgBed}</td>`).join("")}</tr>
+<tr><td>起きた時刻の平均</td>${M.map((m) => `<td class="num">${m.s.avgWake}</td>`).join("")}</tr>
+<tr><td>目覚め◎の日数</td>${M.map((m) => `<td class="num">${m.s.wakeGood}日</td>`).join("")}</tr>
+<tr><td>意識して運動した日</td>${M.map((m) => `<td class="num">${m.s.exDays}日</td>`).join("")}</tr>
+<tr><td>3つそろった食事</td>${M.map((m) => `<td class="num">${m.s.balanced}／${m.s.mealsEaten}回</td>`).join("")}</tr>
+<tr><td>朝ケア ✓／夜ケア ✓</td>${M.map((m) => `<td class="num">${m.s.careAM}日／${m.s.carePM}日</td>`).join("")}</tr>
+</tbody></table><ul class="dots" style="margin-top:4mm">${(T.trends || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`);
+  const p4 = shell(data, 4, P, `<div class="sec"><h2><span class="no">6</span>今後の記録目標</h2><p>90日間の記録をもとに、今後も続けやすい記録目標を整理しました。ご自身で取捨選択してお使いください。</p><ul class="checks">${(T.goals || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>
+<div class="sec"><h2><span class="no">7</span>総括</h2><div class="box tint"><p style="margin:0">${esc(T.summary || "")}</p></div></div>
+<p class="note">本レポートは、会員ご本人が90日間に記録した内容を集計・整理したものです。健康状態の評価、病気の判断、減量・食事制限などの指示は含みません。体調についてご不安がある場合は、医療機関にご相談ください。</p>`);
+  return p1 + p2 + p3 + p4;
+}
+
+function renderReport(data) {
+  if (!data || !data.type) throw new Error("type（monthly または total90）がありません");
+  document.getElementById("report").innerHTML = data.type === "total90" ? total90(data) : monthly(data);
+  document.title = `${data.title || "振り返りレポート"}_${data.memberId || ""}`;
+}
+document.getElementById("render").addEventListener("click", () => {
+  const err = document.getElementById("err"); err.textContent = "";
+  try { renderReport(JSON.parse(document.getElementById("json").value)); } catch (e) { err.textContent = "表示できませんでした：" + e.message; }
+});
+window.renderReport = renderReport;
+</script>
+</body>
+</html>
